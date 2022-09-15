@@ -1,0 +1,14 @@
+{
+	"name": "open_lacandon",
+	"version": "1.0.0",
+	"description": "Library Shop GUI",
+	"main": "back/main.js",
+	"scripts": {
+		"start": "electron ."
+	},
+	"repository": "https://github.com/Th3UwU/OpenLacandon",
+	"author": "AUTOR",
+	"devDependencies": {
+		"electron": "^20.0.0"
+	}
+}
