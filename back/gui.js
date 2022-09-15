@@ -10,6 +10,12 @@ class GUI
 			about: null
 		};
 
+		this.user =
+		{
+			username: null,
+			password: null
+		};
+
 		app.whenReady().then(this.init.bind(this));
 		app.on('window-all-closed', app.quit);
 	}
