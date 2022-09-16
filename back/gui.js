@@ -42,7 +42,7 @@ class GUI
 		this.window.main.setMenu(null);
 	}
 
-
 };
 
+//Instala linux
 module.exports = GUI;
