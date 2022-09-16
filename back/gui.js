@@ -46,6 +46,39 @@ class GUI
 		this.window.main.setMenu(null);
 	}
 
+		async register(user, pass, pass2)
+	{
+		let client = new Client
+		({
+			user: "postgres",
+			host: "189.166.255.100",
+			password: "123",
+			database: "tutorial",
+			port: 5432
+		});
+
+		console.log("xd");
+		await client.connect()
+		let res = await client.query("SELECT * FROM info_clientes");
+		
+		let datos = res.rows;
+
+		for (let i = 0; i < datos.length; i++)
+		{
+			if (datos[i].nombre == user)
+			{
+
+				await return "User already taken";
+			}
+
+		}
+
+		await client.query("INSERT INTO(id_cliente, nombre, apellido) VALUE()");
+
+		await client.end();
+		return "User not found";
+	}
+
 	async login(user, pass)
 	{
 		let client = new Client
