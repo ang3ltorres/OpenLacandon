@@ -1,4 +1,5 @@
 const {app, BrowserWindow} = require("electron");
+const {Client} = require("pg");
 
 class GUI
 {
@@ -20,9 +21,12 @@ class GUI
 		app.on('window-all-closed', app.quit);
 	}
 
-	init()
+	async init()
 	{
 		this.createMainWindow();
+
+		let algo = await this.login("RONALDO", "10413");
+		console.log(algo);
 	}
 	
 	createMainWindow()
@@ -42,6 +46,44 @@ class GUI
 		this.window.main.setMenu(null);
 	}
 
+	async login(user, pass)
+	{
+		let client = new Client
+		({
+			user: "postgres",
+			host: "localhost",
+			password: "123",
+			database: "tutorial",
+			port: 5432
+		});
+
+		console.log("xd");
+		await client.connect()
+		let res = await client.query("SELECT * FROM info_clientes");
+		
+		let datos = res.rows;
+
+		for (let i = 0; i < datos.length; i++)
+		{
+			if (datos[i].nombre == user)
+			{
+
+				if (datos[i].id_cliente == pass)
+				{
+					await client.end();
+					return datos[i].id_cliente;
+				}
+				else
+				{
+					await client.end();
+					return "Invalid pass";
+				}
+			}
+		}
+
+		await client.end();
+		return "User not found";
+	}
 };
 
 //Instala linux
