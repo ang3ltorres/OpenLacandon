@@ -86,5 +86,5 @@ class GUI
 	}
 };
 
-//Instala linux
+//Instala linux ugu
 module.exports = GUI;
