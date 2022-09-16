@@ -42,29 +42,7 @@ class GUI
 		this.window.main.setMenu(null);
 	}
 
-	login(user, pass)
-	{
-		const client = new Client
-		({
-			user: "postgres",
-			host: "localhost",
-			password: "123",
-			database: "tutorial",
-			port: 5432
-		});
 
-		(async() =>
-		{
-			await client.connect()
-			const res = await client.query("SELECT * FROM info_clientes");
-			
-			let datos = res.row;
-			for (let i = 0; i < datos.lenght; i++)
-				console.log(datos[i]);
-			
-			await client.end();
-		}
-	}
 };
 
 module.exports = GUI;
