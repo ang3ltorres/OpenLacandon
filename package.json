@@ -9,6 +9,7 @@
 	"repository": "https://github.com/Th3UwU/OpenLacandon",
 	"author": "AUTOR",
 	"devDependencies": {
-		"electron": "^20.0.0"
+		"electron": "^20.1.4",
+		"pg": "^8.8.0"
 	}
 }

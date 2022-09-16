@@ -8,5 +8,5 @@ git
 # Getting started
 git clone https://github.com/Th3UwU/OpenLacandon.git<br />
 cd OpenLacandon<br />
-npm install --save-dev electron<br />
+npm install electron pg --save-dev<br />
 npm start<br />
