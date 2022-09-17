@@ -31,8 +31,8 @@ class GUI
 		await this.createMainWindow();
 		await this.configIpcMain();
 
-		let algo = await this.login("RONALDO", "10413");
-		console.log(algo);
+		//let algo = await this.login("RONALDO", "10413");
+		//console.log(algo);
 
 		//let algo2 = await this.register("RONALDO", "10413", "10413");
 		//console.log(algo2);
@@ -42,8 +42,8 @@ class GUI
 	{
 		ipcMain.on("userLogin", async (event, user, pass) =>
 		{
-			let res = await this.login(user, pass);
-			console.log(res);
+			//let res = await this.login(user, pass);
+			//console.log(res);
 			event.returnValue = "Retorno esto en 'ipc.sendSync(...)'";
 		});
 	}
