@@ -34,7 +34,7 @@ class GUI
 		//let algo = await this.login("RONALDO", "10413");
 		//console.log(algo);
 
-		//let algo2 = await this.register("RONALDO", "10413", "10413");
+		//let algo2 = await this.register("RONALDO", "email", "10413", "10413");
 		//console.log(algo2);
 	}
 
@@ -67,36 +67,34 @@ class GUI
 		//this.window.main.openDevTools();
 	}
 
-	async register(user, pass, pass2)
+	async register(user, email, pass, pass2)
 	{
 		let client = new Client
 		({
 			user: "postgres",
-			host: "189.166.255.100",
+			host: "localhost",
 			password: "123",
-			database: "tutorial",
+			database: "openlacandon",
 			port: 5432
 		});
 
 		console.log("xd");
 		await client.connect()
-		let res = await client.query("SELECT * FROM OPENLACANDON");
-		
-		let datos = res.rows;
+		let reg = await client.query("SELECT * FROM CLIENT");
 
-		for (let i = 0; i < datos.length; i++)
+		if (await client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${user}';`))
 		{
-			if (datos[i].nombre == user)
-			{
-				return "User already taken";
-			}
+			//await client.query(`SELECT * FROM CLIENT WHERE EMAIL = '${email}';`)
+			return "User already taken";
+
 		}
 
+		let input = null;
 		
 		if (pass == pass2)
 		{
-			//let sql_query = "INSERT INTO OPENLACANDON VALUES(?,?)";
-			console.log(sql_query);
+			input = await client.query(`INSERT INTO CLIENT VALUES('${user}, ${email}, ${pass}, ${pass2}')`);
+			console.log(input);
 			
 			await client.end();
 			return "Register successfully completed";
