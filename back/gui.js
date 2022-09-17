@@ -88,7 +88,7 @@ class GUI
 		{
 			if (datos[i].nombre == user)
 			{
-				await return "User already taken";
+				return "User already taken";
 			}
 		}
 
