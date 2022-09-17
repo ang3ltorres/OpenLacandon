@@ -80,7 +80,7 @@ class GUI
 
 		console.log("xd");
 		await client.connect()
-		let res = await client.query("SELECT * FROM info_clientes");
+		let res = await client.query("SELECT * FROM OPENLACANDON");
 		
 		let datos = res.rows;
 
@@ -95,7 +95,7 @@ class GUI
 		
 		if (pass == pass2)
 		{
-			let sql_query = `INSERT INTO info_clientes VALUES(${user}, ${pass})`;
+			//let sql_query = "INSERT INTO OPENLACANDON VALUES(?,?)";
 			console.log(sql_query);
 			
 			await client.end();
@@ -120,7 +120,7 @@ class GUI
 
 		console.log("xd");
 		await client.connect()
-		let res = await client.query("SELECT * FROM info_clientes");
+		let res = await client.query("SELECT * FROM OPENLACANDON");
 		let datos = res.rows;
 
 		for (let i = 0; i < datos.length; i++)
