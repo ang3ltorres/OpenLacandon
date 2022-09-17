@@ -1,4 +1,4 @@
-const {app, BrowserWindow} = require("electron");
+const {app, BrowserWindow, ipcMain} = require("electron");
 const {Client} = require("pg");
 
 class GUI
@@ -17,19 +17,33 @@ class GUI
 			password: null
 		};
 
+		delete process.env.ELECTRON_ENABLE_SECURITY_WARNINGS;
+		process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true;
+
 		app.whenReady().then(this.init.bind(this));
-		app.on('window-all-closed', app.quit);
+		app.on("window-all-closed", app.quit);
 	}
 
 	async init()
 	{
-		this.createMainWindow();
+		await this.createMainWindow();
+		await this.configIpcMain();
 
 		let algo = await this.login("RONALDO", "10413");
 		console.log(algo);
 	}
+
+	async configIpcMain()
+	{
+		ipcMain.on("userLogin", async (event, user, pass) =>
+		{
+			let res = await this.login(user, pass);
+			console.log(res);
+			event.returnValue = "Retorno esto en 'ipc.sendSync(...)'";
+		});
+	}
 	
-	createMainWindow()
+	async createMainWindow()
 	{
 		this.window.main = new BrowserWindow
 		({
@@ -38,12 +52,14 @@ class GUI
 			webPreferences:
 			{
 				nodeIntegration: true,
-				contextIsolation: false
+				contextIsolation: false,
+				webSecurity: false
 			}
 		});
 
-		this.window.main.loadFile("./front/html/index.html");
+		this.window.main.loadFile("./front/html/login_register.html");
 		this.window.main.setMenu(null);
+		this.window.main.openDevTools();
 	}
 
 	async login(user, pass)
@@ -60,7 +76,6 @@ class GUI
 		console.log("xd");
 		await client.connect()
 		let res = await client.query("SELECT * FROM info_clientes");
-		
 		let datos = res.rows;
 
 		for (let i = 0; i < datos.length; i++)
