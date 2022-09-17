@@ -42,8 +42,8 @@ class GUI
 	{
 		ipcMain.on("userLogin", async (event, user, pass) =>
 		{
-			//let res = await this.login(user, pass);
-			//console.log(res);
+			let res = await this.login(user, pass);
+			console.log(res);
 			event.returnValue = "Retorno esto en 'ipc.sendSync(...)'";
 		});
 	}
@@ -67,7 +67,7 @@ class GUI
 		//this.window.main.openDevTools();
 	}
 
-		async register(user, pass, pass2)
+	async register(user, pass, pass2)
 	{
 		let client = new Client
 		({
@@ -107,51 +107,55 @@ class GUI
 		return "Password does not match, try again";
 	}
 
-	async login(user, pass)
+	/**
+	 * Login using an (username / email) and password
+	 * @param  {String} username_email Username or email
+	 * @param  {String} pass      User password
+	 * @return {Number}           User ID, -1 if password is incorrect, -2 if user doesn't exist
+	 */
+	async login(username_email, password)
 	{
 		let client = new Client
 		({
 			user: "postgres",
 			host: "localhost",
 			password: "123",
-			database: "tutorial",
+			database: "openlacandon",
 			port: 5432
 		});
 
-		console.log("xd");
 		await client.connect()
-		let res = await client.query("SELECT * FROM OPENLACANDON");
-		let datos = res.rows;
 
-		for (let i = 0; i < datos.length; i++)
+		// Check user password (if found)
+		let checkUser = async (user) =>
 		{
-			if (datos[i].nombre == user)
+			if (user.password == password)
 			{
-				if (datos[i].id_cliente == pass)
-				{
-					// Save user data
-					this.user.username = user;
-					this.user.password = pass;
-					this.user.id = datos[i].id_cliente;
-					this.user.loggedIn = true;
-					
-					console.log(this.user);
-					
-					await client.end();
-					return datos[i].id_cliente;
-				}
-				else
-				{
-					await client.end();
-					return "Invalid pass";
-				}
+				await client.end();
+				return parseInt(user.id);
 			}
-		}
+			else
+			{
+				await client.end();
+				return -1;
+			}
+		};
+		
+		let user = null;
 
-		await client.end();
-		return "User not found";
+		// Try using USERNAME
+		user = await client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${username_email}';`);
+		if (user.rows[0])
+			return await checkUser(user.rows[0]);
+
+		// Try using EMAIL
+		user = await client.query(`SELECT * FROM CLIENT WHERE EMAIL = '${username_email}';`);
+		if (user.rows[0])
+			return await checkUser(user.rows[0]);
+
+		// User not found
+		return -2;
 	}
 };
 
-//Instala linux ugu
 module.exports = GUI;
