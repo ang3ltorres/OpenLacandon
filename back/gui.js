@@ -13,8 +13,10 @@ class GUI
 
 		this.user =
 		{
+			loggedIn: false,
 			username: null,
-			password: null
+			password: null,
+			id: null
 		};
 
 		delete process.env.ELECTRON_ENABLE_SECURITY_WARNINGS;
@@ -59,7 +61,7 @@ class GUI
 
 		this.window.main.loadFile("./front/html/login_register.html");
 		this.window.main.setMenu(null);
-		this.window.main.openDevTools();
+		//this.window.main.openDevTools();
 	}
 
 	async login(user, pass)
@@ -82,9 +84,16 @@ class GUI
 		{
 			if (datos[i].nombre == user)
 			{
-
 				if (datos[i].id_cliente == pass)
 				{
+					// Save user data
+					this.user.username = user;
+					this.user.password = pass;
+					this.user.id = datos[i].id_cliente;
+					this.user.loggedIn = true;
+					
+					console.log(this.user);
+					
 					await client.end();
 					return datos[i].id_cliente;
 				}
