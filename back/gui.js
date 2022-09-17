@@ -33,6 +33,9 @@ class GUI
 
 		let algo = await this.login("RONALDO", "10413");
 		console.log(algo);
+
+		//let algo2 = await this.register("RONALDO", "10413", "10413");
+		//console.log(algo2);
 	}
 
 	async configIpcMain()
@@ -85,16 +88,23 @@ class GUI
 		{
 			if (datos[i].nombre == user)
 			{
-
 				await return "User already taken";
 			}
-
 		}
 
-		await client.query("INSERT INTO(id_cliente, nombre, apellido) VALUE()");
+		
+		if (pass == pass2)
+		{
+			let sql_query = `INSERT INTO info_clientes VALUES(${user}, ${pass})`;
+			console.log(sql_query);
+			
+			await client.end();
+			return "Register successfully completed";
+		}
+		
 
 		await client.end();
-		return "User not found";
+		return "Password does not match, try again";
 	}
 
 	async login(user, pass)
