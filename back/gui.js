@@ -110,8 +110,8 @@ class GUI
 	/**
 	 * Login using an (username / email) and password
 	 * @param  {String} username_email Username or email
-	 * @param  {String} pass      User password
-	 * @return {Number}           User ID, -1 if password is incorrect, -2 if user doesn't exist
+	 * @param  {String} pass           User password
+	 * @return {Number}                User ID, -1 if password is incorrect, -2 if user doesn't exist
 	 */
 	async login(username_email, password)
 	{
