@@ -13,7 +13,7 @@ class GUI
 
 		this.client = null;
 
-		this.user =
+		this.accountInfo =
 		{
 			loggedIn: false,
 			username: null,
@@ -115,7 +115,15 @@ class GUI
 		
 		let user = await this.client.query(`INSERT INTO CLIENT VALUES(DEFAULT, '${username}', '${password}', '${email}');`);
 		user = (await this.client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${username}';`)).rows[0];
-		return parseInt(user.id);
+		let id = parseInt(user.id);
+
+		// Save account data locally
+		this.accountInfo.loggedIn = true;
+		this.accountInfo.username = username;
+		this.accountInfo.password = password;
+		this.accountInfo.id = id;
+
+		return id;
 	}
 
 	/**
@@ -127,10 +135,20 @@ class GUI
 	async login(username_email, password)
 	{
 		// Check user password (if found)
-		let checkUser = (user) =>
+		let checkUser = (user, accountInfo) =>
 		{
 			if (user.password == password)
-				return parseInt(user.id);
+			{
+				let id = parseInt(user.id);
+
+				// Save account data locally
+				accountInfo.loggedIn = true;
+				accountInfo.username = user.username;
+				accountInfo.password = user.password;
+				accountInfo.id = id;
+
+				return id;
+			}
 			else
 				return -1;
 		};
@@ -140,12 +158,12 @@ class GUI
 		// Try using USERNAME
 		user = (await this.client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${username_email}';`)).rows[0];
 		if (user)
-			return checkUser(user);
+			return checkUser(user, this.accountInfo);
 
 		// Try using EMAIL
 		user = (await this.client.query(`SELECT * FROM CLIENT WHERE EMAIL = '${username_email}';`)).rows[0];
 		if (user)
-			return checkUser(user);
+			return checkUser(user, this.accountInfo);
 
 		// User not found
 		return -2;
