@@ -79,3 +79,8 @@ body {
 	cursor: pointer;
 	background-color: rgb(202, 42, 54);
 }
+
+/* Register form hidden by default */
+#register {
+	display: none;
+}

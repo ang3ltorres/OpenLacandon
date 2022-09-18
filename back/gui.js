@@ -46,6 +46,13 @@ class GUI
 			console.log(res);
 			event.returnValue = "Retorno esto en 'ipc.sendSync(...)'";
 		});
+
+		ipcMain.on("userRegister", async (event, username, email, password, passwordConfirmation) =>
+		{
+			//let res = await this.login(username, email, password, passwordConfirmation);
+			console.log({username, email, password, passwordConfirmation});
+			event.returnValue = "Retorno esto en 'ipc.sendSync(...)'";
+		});
 	}
 	
 	async createMainWindow()

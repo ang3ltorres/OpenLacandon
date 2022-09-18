@@ -7,20 +7,43 @@
 	</head>
 	<body>
 		<div class="container">
+
 			<div class="form" id="login">
 				<h1>Inicio de sesión</h1>
 				
-				<label for="login_user">Nombre de usuario o email</label>
-				<input id="login_user" type="text"></input>
+				<label for="login_username">Nombre de usuario o email</label>
+				<input id="login_username" type="text"></input>
 
-				<label for="login_pass">Contraseña</label>
-				<input id="login_pass" type="password"></input>
+				<label for="login_password">Contraseña</label>
+				<input id="login_password" type="password"></input>
 
 				<div class="buttons">
 					<button id="login_button" type="button">Iniciar sesión</button>
 					<button id="login_new_account" type="button">Registrarse</button>
 				</div>
 			</div>
+
+			<div class="form" id="register">
+				<h1>Registrarse</h1>
+				
+				<label for="register_username">Nombre de usuario</label>
+				<input id="register_username" type="text"></input>
+
+				<label for="register_email">Correo electrónico</label>
+				<input id="register_email" type="text"></input>
+
+				<label for="register_password">Contraseña</label>
+				<input id="register_password" type="password"></input>
+
+				<label for="register_password_confirmation">Confirmar Contraseña</label>
+				<input id="register_password_confirmation" type="password"></input>
+
+				<div class="buttons">
+					<button id="register_button" type="button">Registrarse</button>
+					<button id="register_login_instead" type="button">Iniciar sesión</button>
+				</div>
+			</div>
+
 		</div>
 	</body>
 	<script src="../js/login_register.js"></script>
