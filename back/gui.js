@@ -40,16 +40,16 @@ class GUI
 
 	async configIpcMain()
 	{
-		ipcMain.on("userLogin", async (event, user, pass) =>
+		ipcMain.on("userLogin", async (event, username_email, password) =>
 		{
-			let res = await this.login(user, pass);
+			let res = await this.login(username_email, password);
 			console.log(res);
 			event.returnValue = "Retorno esto en 'ipc.sendSync(...)'";
 		});
 
 		ipcMain.on("userRegister", async (event, username, email, password, passwordConfirmation) =>
 		{
-			//let res = await this.login(username, email, password, passwordConfirmation);
+			//let res = await this.register(username, email, password, passwordConfirmation);
 			console.log({username, email, password, passwordConfirmation});
 			event.returnValue = "Retorno esto en 'ipc.sendSync(...)'";
 		});
@@ -115,7 +115,7 @@ class GUI
 	/**
 	 * Login using an (username / email) and password
 	 * @param  {String} username_email Username or email
-	 * @param  {String} pass           User password
+	 * @param  {String} password       User password
 	 * @return {Number}                User ID, -1 if password is incorrect, -2 if user doesn't exist
 	 */
 	async login(username_email, password)
