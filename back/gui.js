@@ -101,23 +101,21 @@ class GUI
 	 */
 	async register(username, email, password, passwordConfirmation)
 	{
+		//password (if non coincidences)
+		if (password != passwordConfirmation)
+			return -2;
+
 		//Resources and user/email existence confirmation queries
-		let checkUser = await this.client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${username}';`);
-		let checkEmail = await this.client.query(`SELECT * FROM CLIENT WHERE EMAIL = '${email}';`);
+		let checkUser = (await this.client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${username}';`)).rows[0];
+		let checkEmail = (await this.client.query(`SELECT * FROM CLIENT WHERE EMAIL = '${email}';`)).rows[0];
 		
 		//user/email (if taken)
-		if (checkUser.rows[0] || checkEmail.rows[0])
+		if (checkUser || checkEmail)
 			return -1;
 		
-		//password (if non coincidences)
-		if (password == passwordConfirmation)
-		{
-			let user = await this.client.query(`INSERT INTO CLIENT VALUES(DEFAULT, '${username}', '${password}', '${email}');`);
-			user = await this.client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${username}';`);
-			return user.rows[0].id;
-		}
-
-		return -2;
+		let user = await this.client.query(`INSERT INTO CLIENT VALUES(DEFAULT, '${username}', '${password}', '${email}');`);
+		user = (await this.client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${username}';`)).rows[0];
+		return parseInt(user.id);
 	}
 
 	/**
@@ -140,14 +138,14 @@ class GUI
 		let user = null;
 
 		// Try using USERNAME
-		user = await this.client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${username_email}';`);
-		if (user.rows[0])
-			return checkUser(user.rows[0]);
+		user = (await this.client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${username_email}';`)).rows[0];
+		if (user)
+			return checkUser(user);
 
 		// Try using EMAIL
-		user = await this.client.query(`SELECT * FROM CLIENT WHERE EMAIL = '${username_email}';`);
-		if (user.rows[0])
-			return checkUser(user.rows[0]);
+		user = (await this.client.query(`SELECT * FROM CLIENT WHERE EMAIL = '${username_email}';`)).rows[0];
+		if (user)
+			return checkUser(user);
 
 		// User not found
 		return -2;
