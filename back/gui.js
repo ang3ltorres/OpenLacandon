@@ -93,15 +93,13 @@ class GUI
 		email = await client.query(`SELECT * FROM CLIENT WHERE EMAIL = '${email}';`);
 		
 		if (user.rows[0] || email.rows[0])
-		{
 			return "User already taken";
-		}
 
 		let input = null;
 		
 		if (pass == pass2)
 		{
-			input = await client.query(`INSERT INTO CLIENT VALUES('${user}, ${email}, ${pass}, ${pass2}')`);
+			input = await client.query(`INSERT INTO CLIENT VALUES(DEFAULT,'${user}', '${email}', '${pass}', '${pass2}')`);
 			console.log(input);
 			
 			await client.end();
