@@ -42,16 +42,15 @@ class GUI
 	{
 		ipcMain.on("userLogin", async (event, username_email, password) =>
 		{
-			let res = await this.login(username_email, password);
-			console.log(res);
-			event.returnValue = "Retorno esto en 'ipc.sendSync(...)'";
+			event.returnValue = await this.login(username_email, password);
 		});
 
 		ipcMain.on("userRegister", async (event, username, email, password, passwordConfirmation) =>
 		{
-			//let res = await this.register(username, email, password, passwordConfirmation);
 			console.log({username, email, password, passwordConfirmation});
-			event.returnValue = "Retorno esto en 'ipc.sendSync(...)'";
+			let ugu = await this.register(username, email, password, passwordConfirmation);
+			event.returnValue = ugu;
+			console.log(ugu);
 		});
 	}
 	
@@ -79,7 +78,7 @@ class GUI
 		let client = new Client
 		({
 			user: "postgres",
-			host: "localhost",
+			host: "189.166.255.100",
 			password: "123",
 			database: "openlacandon",
 			port: 5432
@@ -89,26 +88,27 @@ class GUI
 		await client.connect()
 		let reg = await client.query("SELECT * FROM CLIENT");
 
-		user = await client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${user}';`);
-		email = await client.query(`SELECT * FROM CLIENT WHERE EMAIL = '${email}';`);
+		let checkUser = await client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${user}';`);
+		let checkEmail = await client.query(`SELECT * FROM CLIENT WHERE EMAIL = '${email}';`);
 		
-		if (user.rows[0] || email.rows[0])
-			return "User already taken";
+		if (checkUser.rows[0] || checkEmail.rows[0])
+			return -1;
 
 		let input = null;
 		
 		if (pass == pass2)
 		{
-			input = await client.query(`INSERT INTO CLIENT VALUES(DEFAULT,'${user}', '${email}', '${pass}', '${pass2}')`);
+			input = await client.query(`INSERT INTO CLIENT VALUES(DEFAULT,'${user}', '${pass}', '${email}');`);
 			console.log(input);
-			
+			let xd = await client.query(`SELECT * CLIENT WHERE USERNAME = '${user}';`).rows[0].id;
+
 			await client.end();
-			return "Register successfully completed";
+			return xd;
 		}
 		
 
 		await client.end();
-		return "Password does not match, try again";
+		return -2;
 	}
 
 	/**
@@ -122,7 +122,7 @@ class GUI
 		let client = new Client
 		({
 			user: "postgres",
-			host: "localhost",
+			host: "189.166.255.100",
 			password: "123",
 			database: "openlacandon",
 			port: 5432
