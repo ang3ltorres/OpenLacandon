@@ -73,8 +73,17 @@ class GUI
 		//this.window.main.openDevTools();
 	}
 
+	/**
+	 * Register (Function to register new users)
+	 * @param  {String} user, email 
+	 * @param  {String} pass, pass2
+	 * @return {interger} User ID, -1 if username/email already taken,
+	 * 							   -2 if password non coincidences
+	 */
+
 	async register(user, email, pass, pass2)
 	{
+		//get client from database
 		let client = new Client
 		({
 			user: "postgres",
@@ -84,18 +93,20 @@ class GUI
 			port: 5432
 		});
 
-		console.log("xd");
-		await client.connect()
-		let reg = await client.query("SELECT * FROM CLIENT");
+		await client.connect
 
+		//Resources and user/email existence confirmation queries
+		let reg = await client.query("SELECT * FROM CLIENT");
 		let checkUser = await client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${user}';`);
 		let checkEmail = await client.query(`SELECT * FROM CLIENT WHERE EMAIL = '${email}';`);
 		
+		//user/email (if taken)
 		if (checkUser.rows[0] || checkEmail.rows[0])
 			return -1;
 
 		let input = null;
 		
+		//password (if non coincidences)
 		if (pass == pass2)
 		{
 			input = await client.query(`INSERT INTO CLIENT VALUES(DEFAULT,'${user}', '${pass}', '${email}');`);
