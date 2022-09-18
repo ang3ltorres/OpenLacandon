@@ -89,11 +89,12 @@ class GUI
 		await client.connect()
 		let reg = await client.query("SELECT * FROM CLIENT");
 
-		if (await client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${user}';`))
+		user = await client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${user}';`);
+		email = await client.query(`SELECT * FROM CLIENT WHERE EMAIL = '${email}';`);
+		
+		if (user.rows[0] || email.rows[0])
 		{
-			//await client.query(`SELECT * FROM CLIENT WHERE EMAIL = '${email}';`)
 			return "User already taken";
-
 		}
 
 		let input = null;
