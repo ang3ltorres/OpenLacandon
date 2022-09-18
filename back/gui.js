@@ -11,6 +11,8 @@ class GUI
 			about: null
 		};
 
+		this.client = null;
+
 		this.user =
 		{
 			loggedIn: false,
@@ -23,7 +25,7 @@ class GUI
 		process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true;
 
 		app.whenReady().then(this.init.bind(this));
-		app.on("window-all-closed", app.quit);
+		app.on("window-all-closed", this.quit.bind(this));
 	}
 
 	async init()
@@ -31,26 +33,41 @@ class GUI
 		await this.createMainWindow();
 		await this.configIpcMain();
 
-		//let algo = await this.login("RONALDO", "10413");
-		//console.log(algo);
+		// Login
+		this.client = new Client
+		({
+			user: "postgres",
+			host: "localhost",
+			password: "123",
+			database: "openlacandon",
+			port: 5432
+		});
+		await this.client.connect();
+	}
 
-		//let algo2 = await this.register("RONALDO", "email", "10413", "10413");
-		//console.log(algo2);
+	async quit()
+	{
+		console.log("EXIT");
+		await this.client.end();
+		app.quit();
 	}
 
 	async configIpcMain()
 	{
 		ipcMain.on("userLogin", async (event, username_email, password) =>
 		{
-			event.returnValue = await this.login(username_email, password);
+			console.log({username_email, password});
+			let res = await this.login(username_email, password);
+			event.returnValue = res;
+			console.log(res);
 		});
 
 		ipcMain.on("userRegister", async (event, username, email, password, passwordConfirmation) =>
 		{
 			console.log({username, email, password, passwordConfirmation});
-			let ugu = await this.register(username, email, password, passwordConfirmation);
-			event.returnValue = ugu;
-			console.log(ugu);
+			let res = await this.register(username, email, password, passwordConfirmation);
+			event.returnValue = res;
+			console.log(res);
 		});
 	}
 	
@@ -75,50 +92,31 @@ class GUI
 
 	/**
 	 * Register (Function to register new users)
-	 * @param  {String} user, email 
-	 * @param  {String} pass, pass2
-	 * @return {interger} User ID, -1 if username/email already taken,
-	 * 							   -2 if password non coincidences
+	 * @param  {String} username             Username
+	 * @param  {String} email                Email
+	 * @param  {String} password             Account password
+	 * @param  {String} passwordConfirmation Password confirmation
+	 * @return {Number}                      User ID, -1 if username/email already taken,
+	 * 							             -2 if password non coincidences
 	 */
-
-	async register(user, email, pass, pass2)
+	async register(username, email, password, passwordConfirmation)
 	{
-		//get client from database
-		let client = new Client
-		({
-			user: "postgres",
-			host: "189.166.255.100",
-			password: "123",
-			database: "openlacandon",
-			port: 5432
-		});
-
-		await client.connect
-
 		//Resources and user/email existence confirmation queries
-		let reg = await client.query("SELECT * FROM CLIENT");
-		let checkUser = await client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${user}';`);
-		let checkEmail = await client.query(`SELECT * FROM CLIENT WHERE EMAIL = '${email}';`);
+		let checkUser = await this.client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${username}';`);
+		let checkEmail = await this.client.query(`SELECT * FROM CLIENT WHERE EMAIL = '${email}';`);
 		
 		//user/email (if taken)
 		if (checkUser.rows[0] || checkEmail.rows[0])
 			return -1;
-
-		let input = null;
 		
 		//password (if non coincidences)
-		if (pass == pass2)
+		if (password == passwordConfirmation)
 		{
-			input = await client.query(`INSERT INTO CLIENT VALUES(DEFAULT,'${user}', '${pass}', '${email}');`);
-			console.log(input);
-			let xd = await client.query(`SELECT * CLIENT WHERE USERNAME = '${user}';`).rows[0].id;
-
-			await client.end();
-			return xd;
+			let user = await this.client.query(`INSERT INTO CLIENT VALUES(DEFAULT, '${username}', '${password}', '${email}');`);
+			user = await this.client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${username}';`);
+			return user.rows[0].id;
 		}
-		
 
-		await client.end();
 		return -2;
 	}
 
@@ -130,43 +128,26 @@ class GUI
 	 */
 	async login(username_email, password)
 	{
-		let client = new Client
-		({
-			user: "postgres",
-			host: "189.166.255.100",
-			password: "123",
-			database: "openlacandon",
-			port: 5432
-		});
-
-		await client.connect()
-
 		// Check user password (if found)
-		let checkUser = async (user) =>
+		let checkUser = (user) =>
 		{
 			if (user.password == password)
-			{
-				await client.end();
 				return parseInt(user.id);
-			}
 			else
-			{
-				await client.end();
 				return -1;
-			}
 		};
 		
 		let user = null;
 
 		// Try using USERNAME
-		user = await client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${username_email}';`);
+		user = await this.client.query(`SELECT * FROM CLIENT WHERE USERNAME = '${username_email}';`);
 		if (user.rows[0])
-			return await checkUser(user.rows[0]);
+			return checkUser(user.rows[0]);
 
 		// Try using EMAIL
-		user = await client.query(`SELECT * FROM CLIENT WHERE EMAIL = '${username_email}';`);
+		user = await this.client.query(`SELECT * FROM CLIENT WHERE EMAIL = '${username_email}';`);
 		if (user.rows[0])
-			return await checkUser(user.rows[0]);
+			return checkUser(user.rows[0]);
 
 		// User not found
 		return -2;
