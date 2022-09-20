@@ -42,12 +42,15 @@ class GUI
 			database: "openlacandon",
 			port: 5432
 		});
-		await this.client.connect();
+
+		try {console.log("CONNECTING"); await this.client.connect(); console.log("CONNECTED");}
+		catch (error) {console.log(error); await this.quit();}
+
 	}
 
 	async quit()
 	{
-		console.log("EXIT");
+		console.log("DISCONNECTING");
 		await this.client.end();
 		app.quit();
 	}
