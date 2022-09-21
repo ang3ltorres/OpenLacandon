@@ -1,5 +1,130 @@
-body
-{
-	font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+html, body {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+}
+
+body {
+	background-color: black;
+}
+
+#container {
+	min-height: calc(100vh - 50px);
+}
+
+/** Top bar **/
+#top_bar {
+	font-size: 34px;
+	display: flex;
+	background-color: rgb(19, 25 ,33);
+	padding: 6px;
+	align-items: center;
+}
+
+#search_box {
+	width: 100%;
+}
+
+#search_button {
+	background-color: lightsalmon;
+	border: 0 solid transparent;
+	box-sizing: border-box;
+	border-radius: 10px;
+}
+
+#search_button img {
+	width: 30px;
+}
+
+#button_shopping_cart, #button_login {
+	background-color: transparent;
+	border: 2px solid red;
+}
+
+#button_shopping_cart{
+	margin: auto 0 auto 10px;
+}
+
+#button_login {
+	margin: auto auto auto 10px;
+}
+
+#button_shopping_cart img, #button_login img {
+	width: 40px;
+}
+
+/** Book item **/
+.book {
+	display: inline-block;
+
+	font-size: 14px;
+	width: 200px;
+	font-family: Arial, Helvetica, sans-serif;
+	
+	border: 2px solid transparent;
+	box-sizing: border-box;
+}
+
+.book img {
+	display: block;
+	border: 6px solid gray;
+	width: 85%;
+
+	margin: 12px auto 6px auto;
+}
+
+.book span {
+	color: white;
+	display: block;
+	font-size: 16px;
+	text-align: left;
+	width: 85%;
 	margin: auto;
+}
+
+.book .title {
+	text-align: center;
+	font-weight: bold;
+}
+
+.book:hover .title {
+	color: orange;
+}
+
+.book:hover {
+	cursor: pointer;
+	border: 2px solid orange;
+}
+
+.book .author {
+	font-size: 12px;
+	color: lightseagreen;
+	font-weight: bold;
+}
+
+.book .format {
+	font-size: 12px;
+	color: lightgray;
+}
+
+.book .price {
+	font-size: 18px;
+	font-weight: bold;
+	margin: auto auto 6px auto;
+}
+
+/** Footer **/
+footer {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	background-color: rgb(19, 25 ,33);
+	box-sizing: border-box;
+	
+	height: 50px;
+	font-size: 11px;
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+	text-align: center;
+	color: white;
 }

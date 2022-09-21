@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain} = require("electron");
+const {app, BrowserWindow, ipcMain, Menu} = require("electron");
 const {Client} = require("pg");
 
 class GUI
@@ -45,7 +45,6 @@ class GUI
 
 		try {console.log("CONNECTING"); await this.client.connect(); console.log("CONNECTED");}
 		catch (error) {console.log(error); await this.quit();}
-
 	}
 
 	async quit()
@@ -78,8 +77,9 @@ class GUI
 	{
 		this.window.main = new BrowserWindow
 		({
-			width: 800,
-			height: 600,
+			width: 1280,
+			height: 720,
+			fullscreen: true,
 			webPreferences:
 			{
 				nodeIntegration: true,
@@ -88,9 +88,37 @@ class GUI
 			}
 		});
 
-		this.window.main.loadFile("./front/html/login_register.html");
-		this.window.main.setMenu(null);
-		//this.window.main.openDevTools();
+		this.window.main.loadFile("./front/html/index.html");
+
+		// Menu
+		let menuTemplate =
+		[
+			{ /* Archivo */
+				label: 'Archivo',
+				type: 'submenu',
+				submenu:
+				[
+					{
+						label: 'Salir',
+						role: 'close'
+					}
+				]
+			},
+
+			{ /* Opciones */
+				label: 'Opciones',
+				type: 'submenu',
+				submenu:
+				[
+					{
+						label: 'Pantalla completa',
+						role: 'togglefullscreen'
+					}
+				]
+			}
+		];
+		this.window.main.setMenu(Menu.buildFromTemplate(menuTemplate));
+		this.window.main.openDevTools();
 	}
 
 	/**

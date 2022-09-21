@@ -2,11 +2,44 @@
 <html>
 	<head>
 		<meta charset="UTF-8" />
-		<title>Hello World!</title>
-		<link rel="stylesheet" href="../style/index.css" />
+		<title>OpenLacandon</title>
+		<link rel="stylesheet" href="../style/index.css" type="text/css" />
 	</head>
 	<body>
-		<h1>💖 Hello World!</h1>
-		<p>Welcome to your Electron application.</p>
+		<div id="container">
+
+			<div id="top_bar">
+				<img id="img_logo" src="../res/logoWhite.svg" alt="OpenLacandon" width="200"/>
+				<input id="search_box" type="text" />
+				<button id="search_button" type="button">
+					<img src="../res/magnifier.svg" alt="Search" />
+				</button>
+				<button id="button_shopping_cart" type="button">
+					<img src="../res/shoppingCart.svg" alt="ShoppingCart" />
+				</button>
+				<button id="button_login" type="button">
+					<img src="../res/login.svg" alt="button_login" />
+				</button>
+			</div>
+
+			<div id="content_book">
+
+				<!-- <template id="template_book"> -->
+				<div class="book">
+					<img src="https://m.media-amazon.com/images/I/811kjwhnjcS._AC_UY654_FMwebp_QL65_.jpg" alt="bookImage"/>
+					<div class="text">
+						<span class="title">Title</span>
+						<span class="author">Author</span>
+						<span class="format">Format</span>
+						<span class="price">$95</span>
+					</div>
+				</div>
+				<!-- </template> -->
+				
+			</div>
+			
+		</div>
+		<footer>Condiciones de uso Aviso de privacidad© 2022-2022, OpenLacandon.com, Inc. o sus afiliados</footer>
 	</body>
+	<script src="../js/index.js"></script>
 </html>
