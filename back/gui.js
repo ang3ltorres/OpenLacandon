@@ -71,6 +71,16 @@ class GUI
 			event.returnValue = res;
 			console.log(res);
 		});
+
+		ipcMain.on("getBookData", async (event) =>
+		{
+			console.log("Getting data");
+			let data = await this.client.query("SELECT ISBN, TITLE, AUTHOR, IMAGE_FRONT FROM BOOK;");
+			console.log("Returning data");
+			event.returnValue = data.rows;
+			
+			console.log("Success");
+		});
 	}
 	
 	async createMainWindow()

@@ -33,13 +33,24 @@ body {
 	border-radius: 10px;
 }
 
+#search_button:hover {
+	background-color: lightgrey;
+	cursor: pointer;
+}
+
 #search_button img {
 	width: 30px;
 }
 
 #button_shopping_cart, #button_login {
 	background-color: transparent;
-	border: 2px solid red;
+	border: 2px solid transparent;
+	border-radius: 8px;
+}
+
+#button_shopping_cart:hover, #button_login:hover {
+	border: 2px solid white;
+	cursor: pointer;
 }
 
 #button_shopping_cart{
@@ -56,7 +67,7 @@ body {
 
 /** Book item **/
 .book {
-	display: inline-block;
+	display: table-cell;
 
 	font-size: 14px;
 	width: 200px;

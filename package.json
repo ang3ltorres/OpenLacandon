@@ -1,15 +1,23 @@
 {
-	"name": "open_lacandon",
-	"version": "1.0.0",
-	"description": "Library Shop GUI",
-	"main": "back/main.js",
-	"scripts": {
-		"start": "electron ."
-	},
-	"repository": "https://github.com/Th3UwU/OpenLacandon",
-	"author": "AUTOR",
-	"devDependencies": {
-		"electron": "^20.1.4",
-		"pg": "^8.8.0"
-	}
+  "name": "openlacandon",
+  "version": "1.0.0",
+  "description": "",
+  "main": "back/main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Th3UwU/OpenLacandon.git"
+  },
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Th3UwU/OpenLacandon/issues"
+  },
+  "homepage": "https://github.com/Th3UwU/OpenLacandon#readme",
+  "devDependencies": {
+    "electron": "^20.2.0",
+    "pg": "^8.8.0"
+  }
 }
