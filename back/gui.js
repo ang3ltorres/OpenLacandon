@@ -8,10 +8,12 @@ class GUI
 		this.window =
 		{
 			main: null,
-			about: null
+			about: null,
+			detail: null
 		};
 
 		this.client = null;
+		this.bookData = null;
 
 		this.accountInfo =
 		{
@@ -45,10 +47,13 @@ class GUI
 
 		try {console.log("CONNECTING"); await this.client.connect(); console.log("CONNECTED");}
 		catch (error) {console.log(error); await this.quit();}
+
+		this.bookData = await this.client.query("SELECT * FROM BOOK;");
 	}
 
 	async quit()
 	{
+		//localStorage.clear();
 		console.log("DISCONNECTING");
 		await this.client.end();
 		app.quit();
@@ -74,12 +79,14 @@ class GUI
 
 		ipcMain.on("getBookData", async (event) =>
 		{
-			console.log("Getting data");
-			let data = await this.client.query("SELECT ISBN, TITLE, AUTHOR, IMAGE_FRONT FROM BOOK;");
 			console.log("Returning data");
-			event.returnValue = data.rows;
-			
-			console.log("Success");
+			event.returnValue = this.bookData.rows;
+		});
+
+		ipcMain.on("detailWindow", async (event) =>
+		{
+			this.createDetailWindow();
+			event.returnValue = 0;
 		});
 	}
 	
@@ -129,6 +136,30 @@ class GUI
 		];
 		this.window.main.setMenu(Menu.buildFromTemplate(menuTemplate));
 		this.window.main.openDevTools();
+	}
+
+	async createDetailWindow()
+	{
+		this.window.detail = new BrowserWindow
+		({
+			parent: this.window.main,
+			modal: true,
+			show: false,
+			width: 800,
+			height: 600,
+			fullscreen: false,
+			webPreferences:
+			{
+				nodeIntegration: true,
+				contextIsolation: false,
+				webSecurity: false
+			}
+		});
+
+		this.window.detail.loadFile("./front/html/detail.html");
+		this.window.detail.setMenu(null);
+		this.window.detail.openDevTools();
+		this.window.detail.once("ready-to-show", () => {this.window.detail.show();})
 	}
 
 	/**
