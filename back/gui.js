@@ -88,6 +88,13 @@ class GUI
 			this.createDetailWindow();
 			event.returnValue = 0;
 		});
+
+		ipcMain.on("customQuery", async (event, query) => 
+		{
+			console.log(query);
+			let data = (await this.client.query(query)).rows;
+			event.returnValue = data;
+		});
 	}
 	
 	async createMainWindow()
