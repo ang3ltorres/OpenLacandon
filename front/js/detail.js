@@ -18,8 +18,8 @@ else
 	bookImage.src = "../res/default.jpg";
 
 //Set book details
-bookTitle.innerHTML = BookData[0].title;
-bookSynopsis.innerHTML = BookData[0].synopsis;
-bookAuthor.innerHTML = BookData[0].author;
-bookRating.innerHTML = BookData[0].rating;
+bookTitle.innerHTML = bookData[0].title;
+bookSynopsis.innerHTML = bookData[0].synopsis;
+bookAuthor.innerHTML = bookData[0].author;
+bookRating.innerHTML = bookData[0].rating;
 
