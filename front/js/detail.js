@@ -4,11 +4,22 @@ const {ipcRenderer} = require("electron");
 let isbn = localStorage.getItem("ISBN");
 let bookData = ipcRenderer.sendSync("customQuery", `SELECT * FROM BOOK WHERE ISBN = ${isbn};`);
 
-// Select image
+// Select book details
 let bookImage = document.getElementById("book_image");
+let bookTitle = document.getElementById("title");
+let bookSynopsis = document.getElementById("synopsis");
+let bookAuthor = document.getElementById("author");
+let bookRating = document.getElementById("rating");
 
 // Set image only if it exists on DB
 if (bookData[0].image_front)
 	bookImage.src = URL.createObjectURL(new Blob([bookData[0].image_front], {type: "image/jpg"}));
 else
 	bookImage.src = "../res/default.jpg";
+
+//Set book details
+bookTitle.innerHTML = BookData[0].title;
+bookSynopsis.innerHTML = BookData[0].synopsis;
+bookAuthor.innerHTML = BookData[0].author;
+bookRating.innerHTML = BookData[0].rating;
+

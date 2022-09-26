@@ -39,7 +39,7 @@ class GUI
 		this.client = new Client
 		({
 			user: "postgres",
-			host: "localhost",
+			host: "187.213.159.72",
 			password: "123",
 			database: "openlacandon",
 			port: 5432
