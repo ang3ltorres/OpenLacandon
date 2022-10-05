@@ -44,6 +44,6 @@ document.getElementById("content_book").addEventListener("click", (event) =>
 		let book = event.target.closest(".book");
 		console.log("ISBN Clicked book: %s", book.dataset.isbn);
 		localStorage.setItem("ISBN", book.dataset.isbn)
-		ipcRenderer.sendSync("detailWindow");
+		ipcRenderer.sendSync("createDetailWindow");
 	}
 });

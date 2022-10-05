@@ -1,6 +1,5 @@
-const {app, BrowserWindow, ipcMain, Menu} = require("electron");
+const {app, dialog, BrowserWindow, ipcMain, Menu} = require("electron");
 const {Client} = require("pg");
-const {execSync} = require('child_process');
 
 class GUI
 {
@@ -15,7 +14,7 @@ class GUI
 			detail: null
 		};
 
-		this.adminPassword = null;
+		this.adminPassword = "123";
 		this.connected = false;
 
 		this.client = null;
@@ -50,12 +49,17 @@ class GUI
 			console.log("DISCONNECTING");
 			await this.client.end();
 		}
-		
+
 		app.quit();
 	}
 
 	async configIpcMain()
 	{
+		ipcMain.on("getAdminPassword", async (event) =>
+		{
+			event.returnValue = this.adminPassword;
+		});
+
 		ipcMain.on("userLogin", async (event, username_email, password) =>
 		{
 			console.log({username_email, password});
@@ -78,7 +82,7 @@ class GUI
 			event.returnValue = this.bookData.rows;
 		});
 
-		ipcMain.on("detailWindow", async (event) =>
+		ipcMain.on("createDetailWindow", async (event) =>
 		{
 			this.createDetailWindow();
 			event.returnValue = 0;
@@ -95,6 +99,7 @@ class GUI
 		{
 			// Login
 			this.connectDB();
+			this.bookData = await this.client.query("SELECT * FROM BOOK;");
 
 
 			this.window.welcome.close();
@@ -102,11 +107,63 @@ class GUI
 			event.returnValue = null;
 		});
 
+		ipcMain.on("createWelcomeWindow", async (event) => 
+		{
+
+			if (this.window.backup)
+				this.window.backup.close();
+
+			this.createWelcomeWindow();
+
+			event.returnValue = null;
+		});
+
 		ipcMain.on("createBackupWindow", async (event, password) => 
 		{
-			this.adminPassword = password;
-			this.window.welcome.close();
-			this.createBackupWindow();
+			if (this.adminPassword == password)
+			{
+				this.window.welcome.close();
+				this.createBackupWindow();
+			}
+			else
+				console.log("Invalid pass\n");
+
+			event.returnValue = null;
+		});
+
+		ipcMain.on("saveFile", async (event) => 
+		{
+			event.returnValue = dialog.showSaveDialogSync
+			({
+				filters: [{name: "Psql Dump", extensions: ["dump"]}]
+			});
+		});
+
+		ipcMain.on("openFile", async (event) => 
+		{
+			event.returnValue = dialog.showOpenDialogSync
+			({
+				properties: ['openFile'],
+				filters: [{name: "Psql Dump", extensions: ["dump"]}]
+			});
+		});
+
+		ipcMain.on("cleanDB", async (event) => 
+		{
+			let postresClient = new Client
+			({
+				user: "postgres",
+				host: "localhost",
+				password: this.adminPassword,
+				database: "postgres",
+				port: 5432
+			});
+
+			postresClient.connect();
+			await postresClient.query("DROP DATABASE IF EXISTS OPENLACANDON;");
+			await postresClient.query("CREATE DATABASE OPENLACANDON;");
+			await postresClient.end();
+
 			event.returnValue = null;
 		});
 	}
@@ -128,7 +185,7 @@ class GUI
 
 		this.window.welcome.loadFile("./front/html/welcome.html");
 		this.window.welcome.setMenu(null);
-		this.window.welcome.openDevTools();
+		//this.window.welcome.openDevTools();
 	}
 
 	async createBackupWindow()
@@ -191,10 +248,6 @@ class GUI
 					{
 						label: 'Pantalla completa',
 						role: 'togglefullscreen'
-					},
-					{
-						label: 'Respaldar BD',
-						click: this.backupBD.bind(this)
 					}
 				]
 			}
@@ -312,32 +365,13 @@ class GUI
 		({
 			user: "postgres",
 			host: "localhost",
-			password: "123",
+			password: this.adminPassword,
 			database: "openlacandon",
 			port: 5432
 		});
 
 		try {console.log("CONNECTING"); await this.client.connect(); console.log("CONNECTED"); this.connected = true;}
 		catch (error) {console.log(error); await this.quit();}
-
-		this.bookData = await this.client.query("SELECT * FROM BOOK;");
-	}
-
-	async backupBD(file, restore)
-	{
-		// pg_dump -h localhost -p 5432 -U postgres -d openlacandon -f ol.dump
-		
-		if (!restore)
-		{
-			let result = execSync('set "PGPASSWORD=123" && pg_dump -h localhost -p 5432 -U postgres -d openlacandon -f openlacandon_backup.dump').toString();
-
-		}
-		else
-		{
-			
-		}
-
-		console.log(result);
 	}
 };
 
