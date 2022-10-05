@@ -1,0 +1,41 @@
+html, body {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+}
+
+
+#container {
+	display: block;
+	background-color: black;
+
+	box-sizing: border-box;
+
+	height: 100%;
+	width: 100%;
+}
+
+img {
+	display: block;
+
+	height: fit-content;
+	margin: 0 auto 0 auto;
+	padding: 24px 0 0 0;
+}
+
+input {
+	display: block;
+
+	height: fit-content;
+	margin: 8px auto 0 auto;
+}
+
+button {
+	display: block;
+
+	margin: 16px auto 0 auto;
+}
+
+#button_enter {
+	margin: 32px auto 0 auto;
+}

@@ -1,5 +1,6 @@
 const {app, BrowserWindow, ipcMain, Menu} = require("electron");
 const {Client} = require("pg");
+const {execSync} = require('child_process');
 
 class GUI
 {
@@ -7,10 +8,15 @@ class GUI
 	{
 		this.window =
 		{
+			welcome: null,
+			backup: null,
 			main: null,
 			about: null,
 			detail: null
 		};
+
+		this.adminPassword = null;
+		this.connected = false;
 
 		this.client = null;
 		this.bookData = null;
@@ -32,30 +38,19 @@ class GUI
 
 	async init()
 	{
-		await this.createMainWindow();
+		await this.createWelcomeWindow();
 		await this.configIpcMain();
-
-		// Login
-		this.client = new Client
-		({
-			user: "postgres",
-			host: "187.213.159.72",
-			password: "123",
-			database: "openlacandon",
-			port: 5432
-		});
-
-		try {console.log("CONNECTING"); await this.client.connect(); console.log("CONNECTED");}
-		catch (error) {console.log(error); await this.quit();}
-
-		this.bookData = await this.client.query("SELECT * FROM BOOK;");
 	}
 
 	async quit()
 	{
 		//localStorage.clear();
-		console.log("DISCONNECTING");
-		await this.client.end();
+		if (this.connected)
+		{
+			console.log("DISCONNECTING");
+			await this.client.end();
+		}
+		
 		app.quit();
 	}
 
@@ -95,6 +90,65 @@ class GUI
 			let data = (await this.client.query(query)).rows;
 			event.returnValue = data;
 		});
+
+		ipcMain.on("createHomeWindow", async (event) => 
+		{
+			// Login
+			this.connectDB();
+
+
+			this.window.welcome.close();
+			this.createMainWindow();
+			event.returnValue = null;
+		});
+
+		ipcMain.on("createBackupWindow", async (event, password) => 
+		{
+			this.adminPassword = password;
+			this.window.welcome.close();
+			this.createBackupWindow();
+			event.returnValue = null;
+		});
+	}
+
+	async createWelcomeWindow()
+	{
+		this.window.welcome = new BrowserWindow
+		({
+			width: 550,
+			height: 400,
+			fullscreen: false,
+			webPreferences:
+			{
+				nodeIntegration: true,
+				contextIsolation: false,
+				webSecurity: false
+			}
+		});
+
+		this.window.welcome.loadFile("./front/html/welcome.html");
+		this.window.welcome.setMenu(null);
+		this.window.welcome.openDevTools();
+	}
+
+	async createBackupWindow()
+	{
+		this.window.backup = new BrowserWindow
+		({
+			width: 800,
+			height: 600,
+			fullscreen: false,
+			webPreferences:
+			{
+				nodeIntegration: true,
+				contextIsolation: false,
+				webSecurity: false
+			}
+		});
+
+		this.window.backup.loadFile("./front/html/backup.html");
+		this.window.backup.setMenu(null);
+		this.window.backup.openDevTools();
 	}
 	
 	async createMainWindow()
@@ -103,7 +157,7 @@ class GUI
 		({
 			width: 1280,
 			height: 720,
-			fullscreen: true,
+			fullscreen: false,
 			webPreferences:
 			{
 				nodeIntegration: true,
@@ -137,6 +191,10 @@ class GUI
 					{
 						label: 'Pantalla completa',
 						role: 'togglefullscreen'
+					},
+					{
+						label: 'Respaldar BD',
+						click: this.backupBD.bind(this)
 					}
 				]
 			}
@@ -246,6 +304,40 @@ class GUI
 
 		// User not found
 		return -2;
+	}
+
+	async connectDB()
+	{
+		this.client = new Client
+		({
+			user: "postgres",
+			host: "localhost",
+			password: "123",
+			database: "openlacandon",
+			port: 5432
+		});
+
+		try {console.log("CONNECTING"); await this.client.connect(); console.log("CONNECTED"); this.connected = true;}
+		catch (error) {console.log(error); await this.quit();}
+
+		this.bookData = await this.client.query("SELECT * FROM BOOK;");
+	}
+
+	async backupBD(file, restore)
+	{
+		// pg_dump -h localhost -p 5432 -U postgres -d openlacandon -f ol.dump
+		
+		if (!restore)
+		{
+			let result = execSync('set "PGPASSWORD=123" && pg_dump -h localhost -p 5432 -U postgres -d openlacandon -f openlacandon_backup.dump').toString();
+
+		}
+		else
+		{
+			
+		}
+
+		console.log(result);
 	}
 };
 
