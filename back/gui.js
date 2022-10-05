@@ -192,8 +192,8 @@ class GUI
 	{
 		this.window.backup = new BrowserWindow
 		({
-			width: 800,
-			height: 600,
+			width: 350,
+			height: 220,
 			fullscreen: false,
 			webPreferences:
 			{
@@ -205,7 +205,7 @@ class GUI
 
 		this.window.backup.loadFile("./front/html/backup.html");
 		this.window.backup.setMenu(null);
-		this.window.backup.openDevTools();
+		//this.window.backup.openDevTools();
 	}
 	
 	async createMainWindow()

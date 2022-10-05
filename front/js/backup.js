@@ -7,19 +7,24 @@ let button_back = document.getElementById("button_back");
 
 button_save.addEventListener("click", () =>
 {
-	let adminPassword = ipcRenderer.sendSync("getAdminPassword")
 	let path = ipcRenderer.sendSync("saveFile");
-
-	execSync(`set "PGPASSWORD=${adminPassword}" && pg_dump -h localhost -p 5432 -U postgres -d openlacandon -f "${path}"`).toString();
+	if (path)
+	{
+		let adminPassword = ipcRenderer.sendSync("getAdminPassword")
+		execSync(`set "PGPASSWORD=${adminPassword}" && pg_dump -h localhost -p 5432 -U postgres -d openlacandon -f "${path}"`).toString();
+	}
 });
 
 button_load.addEventListener("click", () =>
 {
-	let adminPassword = ipcRenderer.sendSync("getAdminPassword")
 	let path = ipcRenderer.sendSync("openFile");
-	ipcRenderer.sendSync("cleanDB");
-	
-	execSync(`set "PGPASSWORD=${adminPassword}" && psql -h localhost -U postgres -p5432 -d openlacandon < "${path}"`).toString();
+	if (path)
+	{
+		let adminPassword = ipcRenderer.sendSync("getAdminPassword")
+		ipcRenderer.sendSync("cleanDB");
+		
+		execSync(`set "PGPASSWORD=${adminPassword}" && psql -h localhost -U postgres -p5432 -d openlacandon < "${path}"`).toString();
+	}
 });
 
 
