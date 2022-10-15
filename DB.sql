@@ -51,15 +51,17 @@ CREATE TABLE BOOK
 	TITLE VARCHAR(64) NOT NULL,
 	AUTHOR VARCHAR(64) NOT NULL,
 	GENRE VARCHAR(64) DEFAULT NULL,
-	SYNOPSIS VARCHAR(256) DEFAULT NULL,
+	SYNOPSIS VARCHAR(2048) DEFAULT NULL,
 	RATING SMALLINT DEFAULT 0 NOT NULL,
 	IMAGE_FRONT BYTEA DEFAULT NULL,
 	IMAGE_BACK BYTEA DEFAULT NULL
 );
 
 -- BOOK EXAMPLES
-INSERT INTO BOOK VALUES(DEFAULT, 'The Martian Chronicles', 'Ray Bradbury');
-INSERT INTO BOOK VALUES(DEFAULT, 'Fairy Tale', 'Stephen King');
+INSERT INTO BOOK VALUES(DEFAULT, 'The Martian Chronicles', 'Ray Bradbury', 'Ciencia ficción', 'In The Martian Chronicles, Ray Bradbury, Americas preeminent storyteller, imagines a place of hope, dreams, and metaphor-- of crystal pillars and fossil seas--where a fine dust settles on the great empty cities of a vanished, devastated civilization. Earthmen conquer Mars and then are conquered by it, lulled by dangerous lies of comfort and familiarity, and enchanted by the lingering glamour of an ancient, mysterious native race. In this classic work of fiction, Bradbury exposes our ambitions, weaknesses, and ignorance in a strange and breathtaking world where man does not belong.', 7);
+
+INSERT INTO BOOK VALUES(DEFAULT, 'Fairy Tale', 'Stephen King', 'Terror', 'Legendary storyteller Stephen King goes into the deepest well of his imagination in this spellbinding novel about a seventeen-year-old boy who inherits the keys to a parallel world where good and evil are at war, and the stakes could not be higher--for that world or ours.<br>Charlie Reade looks like a regular high school kid, great at baseball and football, a decent student. But he carries a heavy load. His mom was killed in a hit-and-run accident when he was seven, and grief drove his dad to drink. Charlie learned how to take care of himself--and his dad. When Charlie is seventeen, he meets a dog named Radar and her aging master, Howard Bowditch, a recluse in a big house at the top of a big hill, with a locked shed in the backyard. Sometimes strange sounds emerge from it.<br>Charlie starts doing jobs for Mr. Bowditch and loses his heart to Radar. Then, when Bowditch dies, he leaves Charlie a cassette tape telling a story no one would believe. What Bowditch knows, and has kept secret all his long life, is that inside the shed is a portal to another world.<br>Kings storytelling in Fairy Tale soars. This is a magnificent and terrifying tale in which good is pitted against overwhelming evil, and a heroic boy--and his dog--must lead the battle.<br>Early in the Pandemic, King asked himself: What could you write that would make you happy?<br>As if my imagination had been waiting for the question to be asked, I saw a vast deserted city--deserted but alive. I saw the empty streets, the haunted buildings, a gargoyle head lying overturned in the street. I saw smashed statues (of what I didnt know, but I eventually found out). I saw a huge, sprawling palace with glass towers so high their tips pierced the clouds. Those images released the story I wanted to tell.', 6);
+
 INSERT INTO BOOK VALUES(DEFAULT, 'Harry Potter and the Sorcerers Stone', 'J.K Rowling');
 INSERT INTO BOOK VALUES(DEFAULT, 'The Divine Comedy', 'Dante Alighieri');
 
@@ -83,7 +85,9 @@ CREATE TABLE FORMAT
 INSERT INTO FORMAT VALUES(DEFAULT, 1, 90, 'Kindle', 140, -1);
 INSERT INTO FORMAT VALUES(DEFAULT, 1, 265, 'Pasta blanda', 120, 55);
 INSERT INTO FORMAT VALUES(DEFAULT, 1, 640, 'Pasta dura', 175, 30);
-INSERT INTO FORMAT VALUES(DEFAULT, 2, 250);
+INSERT INTO FORMAT VALUES(DEFAULT, 2, 250, 'Kindle', 234, -1);
+INSERT INTO FORMAT VALUES(DEFAULT, 2, 460, 'Pasta blanda', 340, 70);
+INSERT INTO FORMAT VALUES(DEFAULT, 2, 620, 'Pasta dura', 280, 45);
 INSERT INTO FORMAT VALUES(DEFAULT, 3, 370, 'Pasta dura', 490, 90);
 INSERT INTO FORMAT VALUES(DEFAULT, 4, 120, 'Kindle', 385, -1);
 
