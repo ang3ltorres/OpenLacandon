@@ -3,6 +3,7 @@ const {ipcRenderer} = require("electron");
 // Retrieve clicked book data
 let isbn = localStorage.getItem("ISBN");
 let bookData = ipcRenderer.sendSync("customQuery", `SELECT * FROM BOOK WHERE ISBN = ${isbn};`);
+let formatData = ipcRenderer.sendSync("customQuery", `SELECT * FROM FORMAT WHERE ISBN = ${isbn};`);
 
 // Select book details
 let bookImage = document.getElementById("book_image");
@@ -49,4 +50,25 @@ for (let i = 0; i < 5; i++)
 	bookRating.append(img);
 }
 
+// Add formats
+for (let i = 0; i < formatData.length; i++)
+{
+	let copy = document.getElementById("template_format").content.cloneNode(true);
+	
+	copy.querySelector(".format").dataset.id_format = formatData[i].id;
+	copy.querySelector(".format_type").innerHTML = formatData[i].type;
+	copy.querySelector(".format_price").innerHTML = formatData[i].price_list;
+	
+	document.getElementById("formats_container").appendChild(copy);
+}
 
+// Format clicked event
+document.getElementById("formats_container").addEventListener("click", (event) =>
+{
+	if (event.target.matches(".format, .format *"))
+	{
+		let format = event.target.closest(".format");
+		console.log("ID Clicked format: %s", format.dataset.id_format);
+		//localStorage.setItem("ID_FORMAT", format.dataset.id_format)
+	}
+});
