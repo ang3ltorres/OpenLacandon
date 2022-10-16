@@ -1,5 +1,6 @@
-const {app, dialog, BrowserWindow, ipcMain, Menu} = require("electron");
+const {app, BrowserWindow, Menu} = require("electron");
 const {Client} = require("pg");
+const configIpcMain = require("./async_comms");
 
 class GUI
 {
@@ -38,7 +39,7 @@ class GUI
 	async init()
 	{
 		await this.createWelcomeWindow();
-		await this.configIpcMain();
+		await configIpcMain(this);
 	}
 
 	async quit()
@@ -51,121 +52,6 @@ class GUI
 		}
 
 		app.quit();
-	}
-
-	async configIpcMain()
-	{
-		ipcMain.on("getAdminPassword", async (event) =>
-		{
-			event.returnValue = this.adminPassword;
-		});
-
-		ipcMain.on("userLogin", async (event, username_email, password) =>
-		{
-			console.log({username_email, password});
-			let res = await this.login(username_email, password);
-			event.returnValue = res;
-			console.log(res);
-		});
-
-		ipcMain.on("userRegister", async (event, username, email, password, passwordConfirmation) =>
-		{
-			console.log({username, email, password, passwordConfirmation});
-			let res = await this.register(username, email, password, passwordConfirmation);
-			event.returnValue = res;
-			console.log(res);
-		});
-
-		ipcMain.on("getBookData", async (event) =>
-		{
-			console.log("Returning data");
-			event.returnValue = this.bookData.rows;
-		});
-
-		ipcMain.on("createDetailWindow", async (event) =>
-		{
-			this.createDetailWindow();
-			event.returnValue = 0;
-		});
-
-		ipcMain.on("customQuery", async (event, query) => 
-		{
-			console.log(query);
-			let data = (await this.client.query(query)).rows;
-			event.returnValue = data;
-		});
-
-		ipcMain.on("createHomeWindow", async (event) => 
-		{
-			// Login
-			this.connectDB();
-			this.bookData = await this.client.query("SELECT * FROM BOOK;");
-
-
-			this.window.welcome.close();
-			this.createMainWindow();
-			event.returnValue = null;
-		});
-
-		ipcMain.on("createWelcomeWindow", async (event) => 
-		{
-
-			if (this.window.backup)
-				this.window.backup.close();
-
-			this.createWelcomeWindow();
-
-			event.returnValue = null;
-		});
-
-		ipcMain.on("createBackupWindow", async (event, password) => 
-		{
-			if (this.adminPassword == password)
-			{
-				this.window.welcome.close();
-				this.createBackupWindow();
-			}
-			else
-				console.log("Invalid pass\n");
-
-			event.returnValue = null;
-		});
-
-		ipcMain.on("saveFile", async (event) => 
-		{
-			event.returnValue = dialog.showSaveDialogSync
-			({
-				filters: [{name: "Psql Dump", extensions: ["dump"]}]
-			});
-		});
-
-		ipcMain.on("openFile", async (event) => 
-		{
-			event.returnValue = dialog.showOpenDialogSync
-			({
-				properties: ['openFile'],
-				filters: [{name: "Psql Dump", extensions: ["dump"]}]
-			});
-		});
-
-		ipcMain.on("cleanDB", async (event) => 
-		{
-			let postresClient = new Client
-			({
-				user: "postgres",
-				host: "localhost",
-				password: this.adminPassword,
-				database: "postgres",
-				port: 5432
-			});
-
-			postresClient.connect();
-			await postresClient.query("DROP DATABASE IF EXISTS OPENLACANDON;");
-			await postresClient.query("CREATE DATABASE OPENLACANDON;");
-			await postresClient.end();
-
-			event.returnValue = null;
-		});
 	}
 
 	async createWelcomeWindow()
