@@ -80,6 +80,13 @@ body {
 	background-color: rgb(202, 42, 54);
 }
 
+#error_field_login {
+	display: inline-block;
+	width: 100%;
+	margin: auto;
+	text-align: center;
+}
+
 /* Register form hidden by default */
 #register {
 	display: none;

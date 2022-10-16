@@ -25,14 +25,7 @@ async function configIpcMain(GUI)
 
 	ipcMain.on("getBookData", async (event) =>
 	{
-		console.log("Returning data");
 		event.returnValue = GUI.bookData.rows;
-	});
-
-	ipcMain.on("createDetailWindow", async (event) =>
-	{
-		GUI.createDetailWindow();
-		event.returnValue = 0;
 	});
 
 	ipcMain.on("customQuery", async (event, query) => 
@@ -40,6 +33,17 @@ async function configIpcMain(GUI)
 		console.log(query);
 		let data = (await GUI.client.query(query)).rows;
 		event.returnValue = data;
+	});
+
+	ipcMain.on("createWelcomeWindow", async (event) => 
+	{
+
+		if (GUI.window.backup)
+			GUI.window.backup.close();
+
+		GUI.createWelcomeWindow();
+
+		event.returnValue = null;
 	});
 
 	ipcMain.on("createHomeWindow", async (event) => 
@@ -54,17 +58,6 @@ async function configIpcMain(GUI)
 		event.returnValue = null;
 	});
 
-	ipcMain.on("createWelcomeWindow", async (event) => 
-	{
-
-		if (GUI.window.backup)
-			GUI.window.backup.close();
-
-		GUI.createWelcomeWindow();
-
-		event.returnValue = null;
-	});
-
 	ipcMain.on("createBackupWindow", async (event, password) => 
 	{
 		if (GUI.adminPassword == password)
@@ -75,6 +68,18 @@ async function configIpcMain(GUI)
 		else
 			console.log("Invalid pass\n");
 
+		event.returnValue = null;
+	});
+
+	ipcMain.on("createDetailWindow", async (event) =>
+	{
+		GUI.createDetailWindow();
+		event.returnValue = 0;
+	});
+
+	ipcMain.on("createLoginWindow", async (event) => 
+	{
+		GUI.createLoginWindow();
 		event.returnValue = null;
 	});
 

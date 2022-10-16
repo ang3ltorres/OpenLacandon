@@ -11,7 +11,7 @@ class GUI
 			welcome: null,
 			backup: null,
 			main: null,
-			about: null,
+			login: null,
 			detail: null
 		};
 
@@ -74,26 +74,6 @@ class GUI
 		//this.window.welcome.openDevTools();
 	}
 
-	async createBackupWindow()
-	{
-		this.window.backup = new BrowserWindow
-		({
-			width: 350,
-			height: 220,
-			fullscreen: false,
-			webPreferences:
-			{
-				nodeIntegration: true,
-				contextIsolation: false,
-				webSecurity: false
-			}
-		});
-
-		this.window.backup.loadFile("./front/html/backup.html");
-		this.window.backup.setMenu(null);
-		//this.window.backup.openDevTools();
-	}
-	
 	async createMainWindow()
 	{
 		this.window.main = new BrowserWindow
@@ -142,6 +122,26 @@ class GUI
 		this.window.main.openDevTools();
 	}
 
+	async createBackupWindow()
+	{
+		this.window.backup = new BrowserWindow
+		({
+			width: 350,
+			height: 220,
+			fullscreen: false,
+			webPreferences:
+			{
+				nodeIntegration: true,
+				contextIsolation: false,
+				webSecurity: false
+			}
+		});
+
+		this.window.backup.loadFile("./front/html/backup.html");
+		this.window.backup.setMenu(null);
+		//this.window.backup.openDevTools();
+	}
+
 	async createDetailWindow()
 	{
 		this.window.detail = new BrowserWindow
@@ -164,6 +164,30 @@ class GUI
 		this.window.detail.setMenu(null);
 		this.window.detail.openDevTools();
 		this.window.detail.once("ready-to-show", () => {this.window.detail.show();})
+	}
+
+	async createLoginWindow()
+	{
+		this.window.login = new BrowserWindow
+		({
+			parent: this.window.main,
+			modal: true,
+			show: false,
+			width: 500,
+			height: 500,
+			fullscreen: false,
+			webPreferences:
+			{
+				nodeIntegration: true,
+				contextIsolation: false,
+				webSecurity: false
+			}
+		});
+
+		this.window.login.loadFile("./front/html/login_register.html");
+		this.window.login.setMenu(null);
+		this.window.login.openDevTools();
+		this.window.login.once("ready-to-show", () => {this.window.login.show();})
 	}
 
 	/**
@@ -199,6 +223,10 @@ class GUI
 		this.accountInfo.password = password;
 		this.accountInfo.id = id;
 
+		// Close window
+		this.window.login.close();
+		this.window.main.webContents.reloadIgnoringCache();
+
 		return id;
 	}
 
@@ -222,6 +250,11 @@ class GUI
 				accountInfo.username = user.username;
 				accountInfo.password = user.password;
 				accountInfo.id = id;
+
+				// Close window
+				this.window.login.close();
+				this.window.main.webContents.reloadIgnoringCache();
+				//this.window.main.reload();
 
 				return id;
 			}

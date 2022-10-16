@@ -1,5 +1,8 @@
 const {ipcRenderer} = require("electron");
 
+//*** Error field ***//
+let error_field_login = document.getElementById("error_field_login");
+
 //*** Forms ***//
 let login_form = document.getElementById("login");
 let register_form = document.getElementById("register");
@@ -15,7 +18,17 @@ let login_username = document.getElementById("login_username");
 let login_password = document.getElementById("login_password");
 
 // Set Buttons
-login_button.addEventListener("click", () => {ipcRenderer.sendSync("userLogin", login_username.value, login_password.value);});
+login_button.addEventListener("click", () =>
+{
+	let res = ipcRenderer.sendSync("userLogin", login_username.value, login_password.value);
+
+	switch (res)
+	{
+		case -1: error_field_login.innerHTML = "Contraseña incorrecta"; break;
+		case -2: error_field_login.innerHTML = "Usuario no existente"; break;
+	}
+});
+
 login_new_account.addEventListener("click", () => {login_form.style.display="none"; register_form.style.display="block";});
 
 // Set Fields

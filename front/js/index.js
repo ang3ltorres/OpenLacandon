@@ -47,3 +47,8 @@ document.getElementById("content_book").addEventListener("click", (event) =>
 		ipcRenderer.sendSync("createDetailWindow");
 	}
 });
+
+document.getElementById("button_login").addEventListener("click", (event) =>
+{
+	ipcRenderer.sendSync("createLoginWindow");
+});
