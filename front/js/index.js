@@ -3,6 +3,15 @@ const fs = require("fs");
 
 let defaultImage = fs.readFileSync(__dirname + "/../res/default.jpg", null);
 
+// Login icon
+let button_login = document.getElementById("button_login");
+let accountInfo = ipcRenderer.sendSync("getAccountInfo");
+
+if (accountInfo.loggedIn)
+	button_login.querySelector("img").src = "../res/logout.svg";
+else
+	button_login.querySelector("img").src = "../res/login.svg";
+
 function addBook(isbn, image, title, author, format, price)
 {
 	let copy = document.getElementById("template_book").content.cloneNode(true);

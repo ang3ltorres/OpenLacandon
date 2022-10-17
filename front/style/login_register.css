@@ -80,7 +80,7 @@ body {
 	background-color: rgb(202, 42, 54);
 }
 
-#error_field_login {
+#error_field_login, #error_field_register {
 	display: inline-block;
 	width: 100%;
 	margin: auto;

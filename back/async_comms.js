@@ -7,6 +7,11 @@ async function configIpcMain(GUI)
 		event.returnValue = GUI.adminPassword;
 	});
 
+	ipcMain.on("getAccountInfo", async (event) =>
+	{
+		event.returnValue = GUI.accountInfo;
+	});
+
 	ipcMain.on("userLogin", async (event, username_email, password) =>
 	{
 		console.log({username_email, password});
@@ -79,7 +84,17 @@ async function configIpcMain(GUI)
 
 	ipcMain.on("createLoginWindow", async (event) => 
 	{
-		GUI.createLoginWindow();
+		// If logged in -> logout
+		if (GUI.accountInfo.loggedIn)
+		{
+			GUI.accountInfo.loggedIn = false;
+			GUI.window.main.webContents.reloadIgnoringCache();
+		}
+		else // Open login/register window
+		{
+			GUI.createLoginWindow();
+		}
+
 		event.returnValue = null;
 	});
 
