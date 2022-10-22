@@ -1,5 +1,3 @@
-from pickle import GLOBAL
-from re import S
 import sys
 import psycopg2
 import PySide2
