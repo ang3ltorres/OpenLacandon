@@ -141,18 +141,18 @@ class WindowSearch(QWidget) :
 			'!='
 		]
 
-		comboBox = QComboBox ()
-		comboBox.addItems (operators)
+		self.comboBox = QComboBox ()
+		self.comboBox.addItems (operators)
 
-		comboList = []
+		self.comboList = []
 
 		for i in cursor.description:
 			columnNames.append(i[0])
-			comboList.append(comboBox)
+			self.comboList.append(self.comboBox)
 
 		for i in range(0,len(columnNames)):
 			self.boxGrid.addWidget(QLabel(columnNames[i], self), i, 0)
-			self.boxGrid.addWidget(comboList[i], i, 1)
+			self.boxGrid.addWidget(self.comboList[i], i, 1)
 
 class WindowAU(QWidget):
 	def __init__(self, addMode = True, parent = None) -> None:
