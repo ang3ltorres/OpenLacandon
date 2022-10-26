@@ -1,3 +1,5 @@
+from dataclasses import dataclass
+from itertools import count
 from msilib.schema import ComboBox
 import sys
 import psycopg2
@@ -19,7 +21,7 @@ class CRUD(QMainWindow):
 		connection = psycopg2.connect(
 			database = "openlacandon",
 			user = "postgres",
-			password = "gaga020515",
+			password = "12345",
 			host = "localhost",
 			port = "5432"
 		)
@@ -141,19 +143,52 @@ class WindowSearch(QWidget) :
 			'!='
 		]
 
+		boolean = [
+			'(Clear)',
+			'True',
+			'False'
+		]
+
+		self.dataTypes = []
+
+		self.strInput = []
+
 		self.comboList = []
+
+		self.comboBool = []
 
 		for i in cursor.description:
 			columnNames.append(i[0])
+			self.dataTypes.append(i[1])
 
 			comboBox = QComboBox ()
 			comboBox.addItems (operators)
 			self.comboList.append(comboBox)
+
+			comboBoxBool = QComboBox()
+			comboBoxBool.addItems (boolean)
+			self.comboBool.append(comboBoxBool)
+			
+			self.strInput.append(QLineEdit(self))
+		
 		
 		#No se porque se pone solo una vez we :c aiuda
 		for i in range(0,len(columnNames)):
 			self.boxGrid.addWidget(QLabel(columnNames[i], self), i, 0)
-			self.boxGrid.addWidget(self.comboList[i], i, 1)
+
+			if (self.dataTypes[i] == 1043):
+				self.boxGrid.addWidget(self.strInput[i], i, 1)
+			
+			elif (self.dataTypes[i] == 16):
+				self.boxGrid.addWidget(self.comboBool[i], i, 1)
+				self.strInput[i].setEnabled(False)
+				self.boxGrid.addWidget(self.strInput[i], i, 1)
+			
+			else:
+				self.boxGrid.addWidget(self.comboList[i], i, 1)
+				self.boxGrid.addWidget(self.strInput[i], i, 2)
+
+				
 
 class WindowAU(QWidget):
 	def __init__(self, addMode = True, parent = None) -> None:
