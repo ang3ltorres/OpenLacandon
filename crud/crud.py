@@ -149,7 +149,8 @@ class WindowSearch(QWidget) :
 		for i in cursor.description:
 			columnNames.append(i[0])
 			self.comboList.append(self.comboBox)
-
+		
+		#No se porque se pone solo una vez we :c aiuda
 		for i in range(0,len(columnNames)):
 			self.boxGrid.addWidget(QLabel(columnNames[i], self), i, 0)
 			self.boxGrid.addWidget(self.comboList[i], i, 1)
