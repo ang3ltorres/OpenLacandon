@@ -141,14 +141,14 @@ class WindowSearch(QWidget) :
 			'!='
 		]
 
-		self.comboBox = QComboBox ()
-		self.comboBox.addItems (operators)
-
 		self.comboList = []
 
 		for i in cursor.description:
 			columnNames.append(i[0])
-			self.comboList.append(self.comboBox)
+
+			comboBox = QComboBox ()
+			comboBox.addItems (operators)
+			self.comboList.append(comboBox)
 		
 		#No se porque se pone solo una vez we :c aiuda
 		for i in range(0,len(columnNames)):
