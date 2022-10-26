@@ -1,3 +1,4 @@
+from msilib.schema import ComboBox
 import sys
 import psycopg2
 import PySide2
@@ -18,7 +19,7 @@ class CRUD(QMainWindow):
 		connection = psycopg2.connect(
 			database = "openlacandon",
 			user = "postgres",
-			password = "123",
+			password = "gaga020515",
 			host = "localhost",
 			port = "5432"
 		)
@@ -49,6 +50,12 @@ class CRUD(QMainWindow):
 		self.menu.addAction("Agregar registro", lambda: self.createWindowAU(True))
 		self.menu.addAction("Cambiar tabla", self.createWindowChangeTable)
 
+		#Search menu
+		self.searchMenu = self.menuBar()
+		self.searchMenu = self.searchMenu.addMenu ("Busqueda")
+		self.searchMenu.addAction ("Nueva Búsqueda",lambda: self.createWindowSearch())
+		self.recentQuerys = self.searchMenu.addMenu ("Busquedas recientes")
+
 		# Set table
 		global currentTable
 		currentTable = "CLIENT"
@@ -71,6 +78,13 @@ class CRUD(QMainWindow):
 		self.windowAU = WindowAU(addMode, self)
 		self.windowAU.setWindowModality(PySide2.QtCore.Qt.ApplicationModal)
 		self.windowAU.show()
+
+	def createWindowSearch(self) -> None:
+		self.windowSearch = WindowSearch(self)
+		self.windowSearch.setWindowModality(PySide2.QtCore.Qt.ApplicationModal)
+		self.windowSearch.show()
+
+	#def searchList (self) -> None:
 
 class WindowChangeTable(QWidget):
 	def __init__(self, parent = None) -> None:
@@ -99,6 +113,46 @@ class WindowChangeTable(QWidget):
 		print(currentTable)
 		self.parent.table.refresh()
 		self.close()
+
+class WindowSearch(QWidget) :
+	def __init__ (self, parent = None) -> None:
+		self.parent = parent
+		super().__init__()
+		self.setWindowTitle("Busqueda")
+
+		# Set layout
+		self.boxMain = QVBoxLayout()
+		self.boxGrid = QGridLayout()
+		self.setLayout(self.boxMain)
+		self.boxMain.addLayout(self.boxGrid)
+
+		#set combo box
+
+
+		columnNames = []
+
+		operators = [
+			'(Clear)',
+			'<',
+			'>',
+			'<=',
+			'>=',
+			'=',
+			'!='
+		]
+
+		comboBox = QComboBox ()
+		comboBox.addItems (operators)
+
+		comboList = []
+
+		for i in cursor.description:
+			columnNames.append(i[0])
+			comboList.append(comboBox)
+
+		for i in range(0,len(columnNames)):
+			self.boxGrid.addWidget(QLabel(columnNames[i], self), i, 0)
+			self.boxGrid.addWidget(comboList[i], i, 1)
 
 class WindowAU(QWidget):
 	def __init__(self, addMode = True, parent = None) -> None:
