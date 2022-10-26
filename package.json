@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/Th3UwU/OpenLacandon#readme",
   "devDependencies": {
-    "electron": "^20.2.0",
+    "electron": "^20.3.3",
     "electron-browser-storage": "^1.0.7",
     "pg": "^8.8.0"
   }
