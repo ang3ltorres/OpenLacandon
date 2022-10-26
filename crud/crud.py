@@ -129,7 +129,7 @@ class WindowSearch(QWidget) :
 		self.boxMain.addLayout(self.boxGrid)
 
 		#set combo box
-		columnNames = []
+		self.columnNames = []
 
 		operators = [
 			'(Clear)',
@@ -151,17 +151,17 @@ class WindowSearch(QWidget) :
 
 		self.strInput = []
 
-		self.comboList = []
+		self.comboOperator = []
 
 		self.comboBool = []
 
 		for i in cursor.description:
-			columnNames.append(i[0])
+			self.columnNames.append(i[0])
 			self.dataTypes.append(i[1])
 
-			comboBox = QComboBox ()
-			comboBox.addItems (operators)
-			self.comboList.append(comboBox)
+			comboBoxOperators = QComboBox ()
+			comboBoxOperators.addItems (operators)
+			self.comboOperator.append(comboBoxOperators)
 
 			comboBoxBool = QComboBox()
 			comboBoxBool.addItems (boolean)
@@ -170,8 +170,8 @@ class WindowSearch(QWidget) :
 			self.strInput.append(QLineEdit(self))
 		
 		
-		for i in range(0,len(columnNames)):
-			self.boxGrid.addWidget(QLabel(columnNames[i], self), i, 0)
+		for i in range(0,len(self.columnNames)):
+			self.boxGrid.addWidget(QLabel(self.columnNames[i], self), i, 0)
 
 			if (self.dataTypes[i] == 1043):
 				self.boxGrid.addWidget(self.strInput[i], i, 1)
@@ -182,7 +182,7 @@ class WindowSearch(QWidget) :
 				self.boxGrid.addWidget(self.strInput[i], i, 1)
 			
 			else:
-				self.boxGrid.addWidget(self.comboList[i], i, 1)
+				self.boxGrid.addWidget(self.comboOperator[i], i, 1)
 				self.boxGrid.addWidget(self.strInput[i], i, 2)
 
 		# Search button
@@ -191,15 +191,49 @@ class WindowSearch(QWidget) :
 		self.boxMain.addWidget(self.buttonSearch)
 
 	def search(self) -> None:
-		print("Buscando")
+
+		empty = True
+		
+		global currentTable
+		query = f"SELECT * FROM {currentTable} WHERE "
 		
 		# Ejemplo
-		query = "SELECT USERNAME, WALLET_BALANCE AS DINEROS FROM CLIENT;"
+		for i in range(len(self.columnNames)):
+			
+			# string
+			if (self.dataTypes[i] == 1043):
+			
+				if (self.strInput[i].text() != ""):
+					empty = False
+					query += f"{self.columnNames[i]} LIKE '%{self.strInput[i].text()}%' AND "
 
-		# Tabla custom de prueba
-		self.windowTableDBCustom = WindowTableDBCustom(query, self)
-		self.windowTableDBCustom.setWindowModality(PySide2.QtCore.Qt.ApplicationModal)
-		self.windowTableDBCustom.show()
+				continue
+
+			# bool
+			if (self.dataTypes[i] == 16):
+
+				if (self.comboBool[i].currentIndex() != 0):
+					empty = False
+					query += f"{self.columnNames[i]} = {self.comboBool[i].itemText(self.comboBool[i].currentIndex())} AND "
+
+				continue
+
+			# number
+			if (self.comboOperator[i].currentIndex() != 0):
+				empty = False
+				query += f"{self.columnNames[i]} {self.comboOperator[i].itemText(self.comboOperator[i].currentIndex())} {self.strInput[i].text()} AND "
+
+
+
+		# Custom table
+		if (not empty):
+			query = query[:-5]
+			query += ";"
+			print(query)
+
+			self.windowTableDBCustom = WindowTableDBCustom(query, self)
+			self.windowTableDBCustom.setWindowModality(PySide2.QtCore.Qt.ApplicationModal)
+			self.windowTableDBCustom.show()
 
 class WindowAU(QWidget):
 	def __init__(self, addMode = True, parent = None) -> None:
