@@ -129,8 +129,6 @@ class WindowSearch(QWidget) :
 		self.boxMain.addLayout(self.boxGrid)
 
 		#set combo box
-
-
 		columnNames = []
 
 		operators = [
@@ -172,7 +170,6 @@ class WindowSearch(QWidget) :
 			self.strInput.append(QLineEdit(self))
 		
 		
-		#No se porque se pone solo una vez we :c aiuda
 		for i in range(0,len(columnNames)):
 			self.boxGrid.addWidget(QLabel(columnNames[i], self), i, 0)
 
@@ -188,7 +185,21 @@ class WindowSearch(QWidget) :
 				self.boxGrid.addWidget(self.comboList[i], i, 1)
 				self.boxGrid.addWidget(self.strInput[i], i, 2)
 
-				
+		# Search button
+		self.buttonSearch = QPushButton("Buscar", self)
+		self.buttonSearch.clicked.connect(self.search)
+		self.boxMain.addWidget(self.buttonSearch)
+
+	def search(self) -> None:
+		print("Buscando")
+		
+		# Ejemplo
+		query = "SELECT USERNAME, WALLET_BALANCE AS DINEROS FROM CLIENT;"
+
+		# Tabla custom de prueba
+		self.windowTableDBCustom = WindowTableDBCustom(query, self)
+		self.windowTableDBCustom.setWindowModality(PySide2.QtCore.Qt.ApplicationModal)
+		self.windowTableDBCustom.show()
 
 class WindowAU(QWidget):
 	def __init__(self, addMode = True, parent = None) -> None:
@@ -283,8 +294,6 @@ class WindowAU(QWidget):
 		self.parent.table.refresh()
 		self.close()
 
-		
-
 class TableDB(QTableWidget):
 
 	def __init__(self, parent = None) -> None:
@@ -334,7 +343,55 @@ class TableDB(QTableWidget):
 			print(sql)
 			cursor.execute(sql)
 			self.refresh()
-		
+
+class TableDBCustom(QTableWidget):
+
+	def __init__(self, parent = None) -> None:
+		self.parent = parent
+		super().__init__(0, 0, None)
+
+		self.verticalHeader().hide()
+		self.setEditTriggers(QAbstractItemView.NoEditTriggers)
+		self.setSelectionBehavior(QAbstractItemView.SelectRows)
+		self.setSelectionMode(QAbstractItemView.SingleSelection)
+
+		self.refresh()
+
+	def refresh(self):
+		global cursor
+		global currentTable
+
+		# Take the query string from parent
+		sqlQuery = self.parent.sqlQuery
+		cursor.execute(sqlQuery)
+		rows = cursor.fetchall()
+
+		columnNames = []
+		for i in cursor.description:
+			columnNames.append(i[0])
+
+		self.clear()
+		self.setColumnCount(len(columnNames))
+		self.setHorizontalHeaderLabels(columnNames)
+		self.setRowCount(len(rows))
+
+		for r in range(len(rows)):
+			for c in range(len(columnNames)):
+				self.setItem(r, c, QTableWidgetItem(str(rows[r][c])))
+
+class WindowTableDBCustom(QWidget):
+	def __init__(self, sqlQuery, parent = None) -> None:
+		self.parent = parent
+		self.sqlQuery = sqlQuery
+		super().__init__()		
+		self.setWindowTitle("Resultado de busqueda")
+
+		# Set layout
+		self.boxMain = QVBoxLayout()
+		self.setLayout(self.boxMain)
+
+		# Add custom table
+		self.boxMain.addWidget(TableDBCustom(self))
 
 def main():
 	app = QApplication(sys.argv)
