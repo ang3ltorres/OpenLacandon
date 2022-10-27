@@ -12,7 +12,8 @@ class GUI
 			backup: null,
 			main: null,
 			login: null,
-			detail: null
+			detail: null,
+			shopping: null
 		};
 
 		this.adminPassword = "123";
@@ -190,15 +191,30 @@ class GUI
 		this.window.login.once("ready-to-show", () => {this.window.login.show();})
 	}
 
-	/**
-	 * Register (Function to register new users)
-	 * @param  {String} username             Username
-	 * @param  {String} email                Email
-	 * @param  {String} password             Account password
-	 * @param  {String} passwordConfirmation Password confirmation
-	 * @return {Number}                      User ID, -1 if username/email already taken,
-	 * 							             -2 if password non coincidences
-	 */
+	async createShoppingWindow()
+	{
+		this.window.shopping = new BrowserWindow
+		({
+			parent: this.window.main,
+			modal: true,
+			show: false,
+			width: 500,
+			height: 500,
+			fullscreen: false,
+			webPreferences:
+			{
+				nodeIntegration: true,
+				contextIsolation: false,
+				webSecurity: false
+			}
+		});
+
+		this.window.shopping.loadFile("./front/html/shopping_cart.html");
+		this.window.shopping.setMenu(null);
+		this.window.shopping.openDevTools();
+		this.window.shopping.once("ready-to-show", () => {this.window.shopping.show();})
+	}
+
 	async register(username, email, password, passwordConfirmation)
 	{
 		//password (if non coincidences)

@@ -98,6 +98,12 @@ async function configIpcMain(GUI)
 		event.returnValue = null;
 	});
 
+	ipcMain.on("createShoppingWindow", async (event) =>
+	{
+		GUI.createShoppingWindow();
+		event.returnValue = 0;
+	});
+
 	ipcMain.on("saveFile", async (event) => 
 	{
 		event.returnValue = dialog.showSaveDialogSync

@@ -1,6 +1,8 @@
 const {ipcRenderer} = require("electron");
 const fs = require("fs");
 
+let button_shopping_cart = document.getElementById("button_shopping_cart");
+
 let defaultImage = fs.readFileSync(__dirname + "/../res/default.jpg", null);
 
 // Login icon
@@ -56,6 +58,14 @@ document.getElementById("content_book").addEventListener("click", (event) =>
 		ipcRenderer.sendSync("createDetailWindow");
 	}
 });
+
+button_shopping_cart.addEventListener("click", (event) =>
+{
+	if (accountInfo.loggedIn)
+		ipcRenderer.sendSync("createShoppingWindow");
+	else
+		alert("Por favor inicie sesión");
+})
 
 document.getElementById("button_login").addEventListener("click", (event) =>
 {
