@@ -9,8 +9,30 @@
 		<div id="container">
 
 			<div id="user_info">
-				<span>Compras de </span>
 				<span id="username"></span>
+				<span id="wallet_balance"></span>
+			</div>
+
+			<div id="order_container">
+				
+				<template id="template_order">
+					<div class="order">
+						<span class="id"></span>
+						<span class="date_order"></span>
+						<span class="date_delivery"></span>
+
+					</div>
+				</template>
+
+				<template id="template_order_detail">
+					<div class="order_detail">
+						<span class="book_title"></span>
+						<span class="format_type"></span>
+						<span class="amount"></span>
+						<span class="total"></span>
+					</div>
+				</template>
+
 			</div>
 			
 		</div>

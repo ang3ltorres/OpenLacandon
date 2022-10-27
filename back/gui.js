@@ -27,6 +27,7 @@ class GUI
 			loggedIn: false,
 			username: null,
 			password: null,
+			wallet_balance: null,
 			id: null
 		};
 
@@ -265,6 +266,7 @@ class GUI
 				accountInfo.loggedIn = true;
 				accountInfo.username = user.username;
 				accountInfo.password = user.password;
+				accountInfo.wallet_balance = user.wallet_balance;
 				accountInfo.id = id;
 
 				// Close window
