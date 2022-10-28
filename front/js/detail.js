@@ -1,5 +1,8 @@
 const {ipcRenderer} = require("electron");
 
+// Account info
+let accountInfo = ipcRenderer.sendSync("getAccountInfo");
+
 // Retrieve clicked book data
 let isbn = localStorage.getItem("ISBN");
 let bookData = ipcRenderer.sendSync("customQuery", `SELECT * FROM BOOK WHERE ISBN = ${isbn};`);
@@ -67,9 +70,14 @@ document.getElementById("formats_container").addEventListener("click", (event) =
 {
 	if (event.target.matches(".format, .format *"))
 	{
-		let format = event.target.closest(".format");
-		console.log("ID Clicked format: %s", format.dataset.id_format);
-		localStorage.setItem("ID_FORMAT", format.dataset.id_format)
-		ipcRenderer.sendSync("createAddToCartWindow");
+		if (accountInfo.loggedIn)
+		{
+			let format = event.target.closest(".format");
+			console.log("ID Clicked format: %s", format.dataset.id_format);
+			localStorage.setItem("ID_FORMAT", format.dataset.id_format)
+			ipcRenderer.sendSync("createAddToCartWindow");
+		}
+		else
+			alert("Por favor inicie sesión");
 	}
 });

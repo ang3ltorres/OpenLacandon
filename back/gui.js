@@ -32,6 +32,8 @@ class GUI
 			id: null
 		};
 
+		this.shoppingCart = [];
+
 		delete process.env.ELECTRON_ENABLE_SECURITY_WARNINGS;
 		process.env.ELECTRON_DISABLE_SECURITY_WARNINGS = true;
 
@@ -263,6 +265,7 @@ class GUI
 		this.accountInfo.loggedIn = true;
 		this.accountInfo.username = username;
 		this.accountInfo.password = password;
+		this.accountInfo.wallet_balance = 0;
 		this.accountInfo.id = id;
 
 		// Close window
@@ -288,11 +291,11 @@ class GUI
 				let id = parseInt(user.id);
 
 				// Save account data locally
-				accountInfo.loggedIn = true;
-				accountInfo.username = user.username;
-				accountInfo.password = user.password;
-				accountInfo.wallet_balance = user.wallet_balance;
-				accountInfo.id = id;
+				this.accountInfo.loggedIn = true;
+				this.accountInfo.username = user.username;
+				this.accountInfo.password = user.password;
+				this.accountInfo.wallet_balance = user.wallet_balance;
+				this.accountInfo.id = id;
 
 				// Close window
 				this.window.login.close();

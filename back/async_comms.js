@@ -114,12 +114,31 @@ async function configIpcMain(GUI)
 	{
 		if (action == "yes")
 		{
-			console.log(id_format);
+			// Get format added count
+			let count = 0;
+			for (let i = 0; i < GUI.shoppingCart.length; i++)
+				if (GUI.shoppingCart[i] == id_format) count++;
+
+			let availableCount = (await GUI.client.query(`SELECT STOCK FROM FORMAT WHERE ID = ${id_format};`)).rows[0].stock;
+			let formatType = (await GUI.client.query(`SELECT TYPE FROM FORMAT WHERE ID = ${id_format};`)).rows[0].type;
+
+			if ((formatType == "Kindle") && (count == 1))
+				event.returnValue = "Solo puede comprar un Kindle por libro";
+
+			else if ((availableCount == -1) || (availableCount > count))
+			{
+				GUI.shoppingCart.push(id_format);
+				GUI.window.addToCart.close();
+				event.returnValue = 0;
+			}
+			else
+				event.returnValue = "No hay stock";
 		}
-
-
-		GUI.window.addToCart.close();
-		event.returnValue = 0;
+		else
+		{
+			GUI.window.addToCart.close();
+			event.returnValue = 0;
+		}
 	});
 
 	ipcMain.on("saveFile", async (event) => 
