@@ -13,7 +13,8 @@ class GUI
 			main: null,
 			login: null,
 			detail: null,
-			account: null
+			account: null,
+			addToCart: null
 		};
 
 		this.adminPassword = "123";
@@ -214,6 +215,30 @@ class GUI
 		this.window.account.setMenu(null);
 		this.window.account.openDevTools();
 		this.window.account.once("ready-to-show", () => {this.window.account.show();})
+	}
+
+	async createAddToCartWindow()
+	{
+		this.window.addToCart = new BrowserWindow
+		({
+			parent: this.window.detail,
+			modal: true,
+			show: false,
+			width: 300,
+			height: 300,
+			fullscreen: false,
+			webPreferences:
+			{
+				nodeIntegration: true,
+				contextIsolation: false,
+				webSecurity: false
+			}
+		});
+
+		this.window.addToCart.loadFile("./front/html/add_to_cart.html");
+		this.window.addToCart.setMenu(null);
+		//this.window.addToCart.openDevTools();
+		this.window.addToCart.once("ready-to-show", () => {this.window.addToCart.show();})
 	}
 
 	async register(username, email, password, passwordConfirmation)

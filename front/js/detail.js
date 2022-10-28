@@ -57,7 +57,7 @@ for (let i = 0; i < formatData.length; i++)
 	
 	copy.querySelector(".format").dataset.id_format = formatData[i].id;
 	copy.querySelector(".format_type").innerHTML = formatData[i].type;
-	copy.querySelector(".format_price").innerHTML = formatData[i].price_list;
+	copy.querySelector(".format_price").innerHTML = `$${formatData[i].price_list}`;
 	
 	document.getElementById("formats_container").appendChild(copy);
 }
@@ -69,6 +69,7 @@ document.getElementById("formats_container").addEventListener("click", (event) =
 	{
 		let format = event.target.closest(".format");
 		console.log("ID Clicked format: %s", format.dataset.id_format);
-		//localStorage.setItem("ID_FORMAT", format.dataset.id_format)
+		localStorage.setItem("ID_FORMAT", format.dataset.id_format)
+		ipcRenderer.sendSync("createAddToCartWindow");
 	}
 });

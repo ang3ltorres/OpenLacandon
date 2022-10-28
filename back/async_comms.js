@@ -104,6 +104,24 @@ async function configIpcMain(GUI)
 		event.returnValue = 0;
 	});
 
+	ipcMain.on("createAddToCartWindow", async (event) =>
+	{
+		GUI.createAddToCartWindow();
+		event.returnValue = 0;
+	});
+
+	ipcMain.on("buttonAddToCartWindow", async (event, action, id_format) =>
+	{
+		if (action == "yes")
+		{
+			console.log(id_format);
+		}
+
+
+		GUI.window.addToCart.close();
+		event.returnValue = 0;
+	});
+
 	ipcMain.on("saveFile", async (event) => 
 	{
 		event.returnValue = dialog.showSaveDialogSync
