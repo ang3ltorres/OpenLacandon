@@ -13,7 +13,7 @@ class GUI
 			main: null,
 			login: null,
 			detail: null,
-			shopping: null
+			account: null
 		};
 
 		this.adminPassword = "123";
@@ -192,9 +192,9 @@ class GUI
 		this.window.login.once("ready-to-show", () => {this.window.login.show();})
 	}
 
-	async createShoppingWindow()
+	async createAccountWindow()
 	{
-		this.window.shopping = new BrowserWindow
+		this.window.account = new BrowserWindow
 		({
 			parent: this.window.main,
 			modal: true,
@@ -210,10 +210,10 @@ class GUI
 			}
 		});
 
-		this.window.shopping.loadFile("./front/html/shopping_cart.html");
-		this.window.shopping.setMenu(null);
-		this.window.shopping.openDevTools();
-		this.window.shopping.once("ready-to-show", () => {this.window.shopping.show();})
+		this.window.account.loadFile("./front/html/account.html");
+		this.window.account.setMenu(null);
+		this.window.account.openDevTools();
+		this.window.account.once("ready-to-show", () => {this.window.account.show();})
 	}
 
 	async register(username, email, password, passwordConfirmation)

@@ -1,7 +1,7 @@
 const {ipcRenderer} = require("electron");
 const fs = require("fs");
 
-let button_shopping_cart = document.getElementById("button_shopping_cart");
+let button_user = document.getElementById("button_user");
 
 let defaultImage = fs.readFileSync(__dirname + "/../res/default.jpg", null);
 
@@ -59,10 +59,10 @@ document.getElementById("content_book").addEventListener("click", (event) =>
 	}
 });
 
-button_shopping_cart.addEventListener("click", (event) =>
+button_user.addEventListener("click", (event) =>
 {
 	if (accountInfo.loggedIn)
-		ipcRenderer.sendSync("createShoppingWindow");
+		ipcRenderer.sendSync("createAccountWindow");
 	else
 		alert("Por favor inicie sesión");
 })

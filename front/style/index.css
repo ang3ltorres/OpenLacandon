@@ -42,18 +42,18 @@ body {
 	width: 30px;
 }
 
-#button_shopping_cart, #button_login {
+#button_user, #button_login {
 	background-color: transparent;
 	border: 2px solid transparent;
 	border-radius: 8px;
 }
 
-#button_shopping_cart:hover, #button_login:hover {
+#button_user:hover, #button_login:hover {
 	border: 2px solid white;
 	cursor: pointer;
 }
 
-#button_shopping_cart{
+#button_user {
 	margin: auto 0 auto 10px;
 }
 
@@ -61,7 +61,7 @@ body {
 	margin: auto auto auto 10px;
 }
 
-#button_shopping_cart img, #button_login img {
+#button_user img, #button_login img {
 	width: 40px;
 }
 

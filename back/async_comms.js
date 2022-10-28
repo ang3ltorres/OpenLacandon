@@ -98,9 +98,9 @@ async function configIpcMain(GUI)
 		event.returnValue = null;
 	});
 
-	ipcMain.on("createShoppingWindow", async (event) =>
+	ipcMain.on("createAccountWindow", async (event) =>
 	{
-		GUI.createShoppingWindow();
+		GUI.createAccountWindow();
 		event.returnValue = 0;
 	});
 
