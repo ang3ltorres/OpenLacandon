@@ -5,7 +5,7 @@ let accountInfo = ipcRenderer.sendSync("getAccountInfo");
 
 // Retrieve clicked book data
 let isbn = localStorage.getItem("ISBN");
-let bookData = ipcRenderer.sendSync("customQuery", `SELECT * FROM BOOK WHERE ISBN = ${isbn};`);
+let bookData = ipcRenderer.sendSync("customQuery", `SELECT * FROM BOOK WHERE ISBN = ${isbn};`)[0];
 let formatData = ipcRenderer.sendSync("customQuery", `SELECT * FROM FORMAT WHERE ISBN = ${isbn};`);
 
 // Select book details
@@ -16,18 +16,18 @@ let bookAuthor = document.getElementById("author");
 let bookRating = document.getElementById("rating");
 
 // Set image only if it exists on DB
-if (bookData[0].image_front)
-	bookImage.src = URL.createObjectURL(new Blob([bookData[0].image_front], {type: "image/jpg"}));
+if (bookData.image_front)
+	bookImage.src = URL.createObjectURL(new Blob([bookData.image_front], {type: "image/jpg"}));
 else
 	bookImage.src = "../res/default.jpg";
 
 // Set book details
-bookTitle.innerHTML = bookData[0].title;
-bookSynopsis.innerHTML = bookData[0].synopsis;
-bookAuthor.innerHTML = bookData[0].author;
+bookTitle.innerHTML = bookData.title;
+bookSynopsis.innerHTML = bookData.synopsis;
+bookAuthor.innerHTML = bookData.author;
 
 // Set the corresponding number of stars
-let rating = bookData[0].rating;
+let rating = bookData.rating;
 for (let i = 0; i < 5; i++)
 {
 	let img = document.createElement("img");
