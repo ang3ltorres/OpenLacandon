@@ -10,13 +10,16 @@
 			<span>Carrito de compra</span>
 
 			<template id="template_item">
-				<div class="item">
+				<div class="item" data-id="">
 					<span class="book_title"></span>
 					<span class="format_type"></span>
 					<span class="amount"></span>
 					<span class="total"></span>
+					<button class="button_remove">Eliminar</button>
 				</div>
 			</template>
+
+			<div id="content_item"></div>
 		</div>
 	</body>
 	<script src="../js/shopping_cart.js"></script>

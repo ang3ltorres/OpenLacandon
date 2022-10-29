@@ -99,6 +99,7 @@ async function configIpcMain(GUI)
 		if (GUI.accountInfo.loggedIn)
 		{
 			GUI.accountInfo.loggedIn = false;
+			GUI.shoppingCart = [];
 			GUI.window.main.webContents.reloadIgnoringCache();
 		}
 		else // Open login/register window
