@@ -11,7 +11,5 @@ button_no.addEventListener("click", (event) =>
 let button_yes = document.getElementById("button_yes");
 button_yes.addEventListener("click", (event) =>
 {
-	let message = ipcRenderer.sendSync("buttonAddToCartWindow", "yes", id_format);
-	if (message != 0)
-		alert(message);
+	ipcRenderer.sendSync("buttonAddToCartWindow", "yes", id_format);
 });

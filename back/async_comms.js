@@ -131,31 +131,37 @@ async function configIpcMain(GUI)
 	{
 		if (action == "yes")
 		{
-			// Get format added count
-			let count = 0;
-			for (let i = 0; i < GUI.shoppingCart.length; i++)
-				if (GUI.shoppingCart[i] == id_format) count++;
-
 			let availableCount = (await GUI.client.query(`SELECT STOCK FROM FORMAT WHERE ID = ${id_format};`)).rows[0].stock;
-			let formatType = (await GUI.client.query(`SELECT TYPE FROM FORMAT WHERE ID = ${id_format};`)).rows[0].type;
+			
+			// Find if format repeated
+			let index;
+			let repeated = false;
 
-			if ((formatType == "Kindle") && (count == 1))
-				event.returnValue = "Solo puede comprar un Kindle por libro";
-
-			else if ((availableCount == -1) || (availableCount > count))
+			for (index = 0; index < GUI.shoppingCart.length; index++)
 			{
-				GUI.shoppingCart.push(id_format);
-				GUI.window.addToCart.close();
-				event.returnValue = 0;
+				if (GUI.shoppingCart[index].id == id_format)
+					{repeated = true; break;}
 			}
+			
+			// If repeated add amount
+			if (repeated)
+				GUI.shoppingCart[index].amount++;
+			// Else add new format to shopping cart items
 			else
-				event.returnValue = "No hay stock";
+			{
+				GUI.shoppingCart.push(
+				{
+					id: id_format,
+					amount: 1
+				});
+			}
+
+			console.log(GUI.shoppingCart);
+
 		}
-		else
-		{
-			GUI.window.addToCart.close();
-			event.returnValue = 0;
-		}
+
+		GUI.window.addToCart.close();
+		event.returnValue = 0;
 	});
 
 	ipcMain.on("saveFile", async (event) => 
