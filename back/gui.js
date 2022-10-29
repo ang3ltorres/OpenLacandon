@@ -14,7 +14,8 @@ class GUI
 			login: null,
 			detail: null,
 			account: null,
-			addToCart: null
+			addToCart: null,
+			shoppingCart: null
 		};
 
 		this.adminPassword = "123";
@@ -193,6 +194,30 @@ class GUI
 		this.window.login.setMenu(null);
 		this.window.login.openDevTools();
 		this.window.login.once("ready-to-show", () => {this.window.login.show();})
+	}
+
+	async createShoppingCartWindow()
+	{
+		this.window.shoppingCart = new BrowserWindow
+		({
+			parent: this.window.main,
+			modal: true,
+			show: false,
+			width: 500,
+			height: 500,
+			fullscreen: false,
+			webPreferences:
+			{
+				nodeIntegration: true,
+				contextIsolation: false,
+				webSecurity: false
+			}
+		});
+
+		this.window.shoppingCart.loadFile("./front/html/shopping_cart.html");
+		this.window.shoppingCart.setMenu(null);
+		this.window.shoppingCart.openDevTools();
+		this.window.shoppingCart.once("ready-to-show", () => {this.window.shoppingCart.show();})
 	}
 
 	async createAccountWindow()

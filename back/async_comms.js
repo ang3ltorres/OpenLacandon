@@ -12,6 +12,17 @@ async function configIpcMain(GUI)
 		event.returnValue = GUI.accountInfo;
 	});
 
+	ipcMain.on("getShoppingCart", async (event) =>
+	{
+		event.returnValue = GUI.shoppingCart;
+	});
+
+	ipcMain.on("setShoppingCart", async (event, shoppingCart) =>
+	{
+		GUI.shoppingCart = shoppingCart;
+		event.returnValue = 0;
+	});
+
 	ipcMain.on("userLogin", async (event, username_email, password) =>
 	{
 		console.log({username_email, password});
@@ -107,6 +118,12 @@ async function configIpcMain(GUI)
 	ipcMain.on("createAddToCartWindow", async (event) =>
 	{
 		GUI.createAddToCartWindow();
+		event.returnValue = 0;
+	});
+
+	ipcMain.on("createShoppingCartWindow", async (event) =>
+	{
+		GUI.createShoppingCartWindow();
 		event.returnValue = 0;
 	});
 

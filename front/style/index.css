@@ -42,26 +42,22 @@ body {
 	width: 30px;
 }
 
-#button_user, #button_login {
+#top_bar button {
 	background-color: transparent;
 	border: 2px solid transparent;
 	border-radius: 8px;
 }
 
-#button_user:hover, #button_login:hover {
+#top_bar button:hover {
 	border: 2px solid white;
 	cursor: pointer;
 }
 
-#button_user {
-	margin: auto 0 auto 10px;
-}
-
-#button_login {
+#top_bar button {
 	margin: auto auto auto 10px;
 }
 
-#button_user img, #button_login img {
+#top_bar button img {
 	width: 40px;
 }
 
