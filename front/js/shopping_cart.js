@@ -1,6 +1,8 @@
 const {ipcRenderer} = require("electron");
 
 let shoppingCart = ipcRenderer.sendSync("getShoppingCart");
+let accountInfo = ipcRenderer.sendSync("getAccountInfo");
+let total = 0.0;
 
 // Refresh the items using the shopping array id_format and get the info from DB
 async function refreshShoppingItems()
@@ -20,13 +22,46 @@ async function refreshShoppingItems()
 		itemInstance.querySelector(".amount").innerHTML
 		= shoppingCart[i].amount;
 
+		let totalTemp = ipcRenderer.sendSync("customQuery", `SELECT PRICE_LIST FROM FORMAT WHERE ID = ${shoppingCart[i].id};`)[0].price_list * shoppingCart[i].amount;
 		itemInstance.querySelector(".total").innerHTML
-		= ipcRenderer.sendSync("customQuery", `SELECT PRICE_LIST FROM FORMAT WHERE ID = ${shoppingCart[i].id};`)[0].price_list * shoppingCart[i].amount;
+		= totalTemp
+
+		total += totalTemp;
 
 		document.getElementById("content_item").appendChild(itemInstance);
 	}
+	
+	// Set items total cost
+	document.getElementById("total").innerHTML = total;
 }
 refreshShoppingItems();
+
+// Buy items button
+document.getElementById("button_buy").addEventListener("click", (event) =>
+{
+	if (accountInfo.wallet_balance < total)
+	{
+		alert("No cuenta con suficiente saldo en la cartera");
+		return;
+	}
+
+	// New wallet balance
+	ipcRenderer.sendSync("customQuery", `UPDATE CLIENT SET WALLET_BALANCE = ${accountInfo.wallet_balance - total} WHERE ID = ${accountInfo.id};`)
+
+	// New format stock
+	for (let i = 0; i < shoppingCart.length; i++)
+	{
+		let currentStock = ipcRenderer.sendSync("customQuery", `SELECT STOCK FROM FORMAT WHERE ID = ${shoppingCart[i].id}`)[0].stock;
+		ipcRenderer.sendSync("customQuery", `UPDATE FORMAT SET STOCK = ${currentStock - shoppingCart[i].amount} WHERE ID = ${shoppingCart[i].id};`)
+
+	}
+
+	// Create purchase and purchase detail
+
+	// Get new user data
+	ipcRenderer.sendSync("refreshAccountInfo");
+	accountInfo = ipcRenderer.sendSync("getAccountInfo");
+});
 
 // Remove button click event
 let content_item = document.getElementById("content_item");

@@ -349,6 +349,16 @@ class GUI
 		return -2;
 	}
 
+	async refreshAccountInfo()
+	{
+		user = (await this.client.query(`SELECT * FROM CLIENT WHERE ID = '${this.accountInfo.id}';`)).rows[0];
+		
+		// Save account data locally
+		this.accountInfo.username = user.username;
+		this.accountInfo.password = user.password;
+		this.accountInfo.wallet_balance = user.wallet_balance;
+	}
+
 	async connectDB()
 	{
 		this.client = new Client

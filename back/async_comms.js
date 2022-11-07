@@ -12,6 +12,11 @@ async function configIpcMain(GUI)
 		event.returnValue = GUI.accountInfo;
 	});
 
+	ipcMain.on("refreshAccountInfo", async (event) =>
+	{
+		event.returnValue = GUI.refreshAccountInfo;
+	});
+
 	ipcMain.on("getShoppingCart", async (event) =>
 	{
 		event.returnValue = GUI.shoppingCart;
