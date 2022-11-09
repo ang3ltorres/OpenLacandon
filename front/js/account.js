@@ -49,11 +49,14 @@ async function refreshOrder()
 			detailInstance.querySelector(".amount").innerHTML = `Cantidad: ${detail[j].amount}`;
 
 			// Set title of book
-			let bookTitle = ipcRenderer.sendSync("customQuery", `SELECT TITLE FROM BOOK WHERE ISBN = (SELECT ISBN FROM FORMAT WHERE ID = (SELECT ID_FORMAT FROM ORD_DETAIL WHERE ID = ${detail[j].id}));`)[0].title;
+
+			// VISTA book->format->ord_detail
+			let bookTitle = ipcRenderer.sendSync("customQuery", `SELECT TITLE FROM BOOK_TITLE_ORDER WHERE DETAIL_ID = ${detail[j].id};`)[0].title;
 			detailInstance.querySelector(".book_title").innerHTML = `Titulo: ${bookTitle}`;
 			
 			// Set format type
-			let formatType = ipcRenderer.sendSync("customQuery", `SELECT TYPE FROM FORMAT WHERE ID = (SELECT ID_FORMAT FROM ORD_DETAIL WHERE ID = ${detail[j].id});`)[0].type;
+			// VISTA format->
+			let formatType = ipcRenderer.sendSync("customQuery", `SELECT TYPE FROM FORMAT_TYPE_ORDER WHERE DETAIL_ID = ${detail[j].id};`)[0].type;
 			detailInstance.querySelector(".format_type").innerHTML = `Formato: ${formatType}`;
 
 			// Set the amount

@@ -13,8 +13,9 @@ async function refreshShoppingItems()
 
 		itemInstance.querySelector(".item").dataset.id = shoppingCart[i].id;
 
+		// VISTA formato/titulo/isbn etc
 		itemInstance.querySelector(".book_title").innerHTML
-		= ipcRenderer.sendSync("customQuery", `SELECT TITLE FROM BOOK WHERE ISBN = (SELECT ISBN FROM FORMAT WHERE ID = ${shoppingCart[i].id});`)[0].title;
+		= ipcRenderer.sendSync("customQuery", `SELECT TITLE FROM BOOK_TITLE_FORMAT WHERE ID = ${shoppingCart[i].id};`)[0].title;
 
 		itemInstance.querySelector(".format_type").innerHTML
 		= ipcRenderer.sendSync("customQuery", `SELECT TYPE FROM FORMAT WHERE ID = ${shoppingCart[i].id};`)[0].type;
