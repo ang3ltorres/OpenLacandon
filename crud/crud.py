@@ -3,6 +3,10 @@ import psycopg2
 import PySide2
 from PySide2.QtWidgets import *
 
+views = []
+querys = []
+
+
 class CRUD(QMainWindow):
 	def __init__(self) -> None:
 
@@ -12,13 +16,13 @@ class CRUD(QMainWindow):
 		global connection
 		global cursor
 		global currentTable
-		global tableNames
+		global tableNames 
 
 		# Postgres connection
 		connection = psycopg2.connect(
 			database = "openlacandon",
 			user = "postgres",
-			password = "12345",
+			password = "123",
 			host = "localhost",
 			port = "5432"
 		)
@@ -53,7 +57,10 @@ class CRUD(QMainWindow):
 		self.searchMenu = self.menuBar()
 		self.searchMenu = self.searchMenu.addMenu ("Busqueda")
 		self.searchMenu.addAction ("Nueva Búsqueda",lambda: self.createWindowSearch())
+		
+		#views
 		self.recentQuerys = self.searchMenu.addMenu ("Busquedas recientes")
+		self.recentQuerys.addAction("Vacio")
 
 		# Set table
 		global currentTable
@@ -116,6 +123,7 @@ class WindowChangeTable(QWidget):
 class WindowSearch(QWidget) :
 	def __init__ (self, parent = None) -> None:
 		self.parent = parent
+		self.recentQuerys = self.parent.recentQuerys
 		super().__init__()
 		self.setWindowTitle("Busqueda")
 
@@ -187,11 +195,24 @@ class WindowSearch(QWidget) :
 		self.buttonSearch.clicked.connect(self.search)
 		self.boxMain.addWidget(self.buttonSearch)
 
+	def closeEvent(self, event):
+		self.recentQuerys.clear()
+
+		for i in range(len(querys)):
+			self.recentQuerys.addAction(querys[i], lambda: self.clickedRecentQuery(views[i]))
+
+	def clickedRecentQuery(self, query):
+		print(query)
+		self.windowTableDBCustom = WindowTableDBCustom(query, self)
+		self.windowTableDBCustom.setWindowModality(PySide2.QtCore.Qt.ApplicationModal)
+		self.windowTableDBCustom.show()
+
 	def search(self) -> None:
 
 		empty = True
 		
 		global currentTable
+		global cursor
 		query = f"SELECT * FROM {currentTable} WHERE "
 		
 		# Ejemplo
@@ -226,7 +247,17 @@ class WindowSearch(QWidget) :
 		if (not empty):
 			query = query[:-5]
 			query += ";"
-			print(query)
+			
+
+			CreateView = f"CREATE OR REPLACE VIEW view{len(views)} AS {query}"
+			view = f"SELECT * FROM view{len(views)}"
+
+			views.append(view) 
+			querys.append(query)
+
+			cursor.execute(CreateView)
+
+			print(query,"\n",CreateView,views)
 
 			self.windowTableDBCustom = WindowTableDBCustom(query, self)
 			self.windowTableDBCustom.setWindowModality(PySide2.QtCore.Qt.ApplicationModal)
@@ -414,7 +445,7 @@ class WindowTableDBCustom(QWidget):
 	def __init__(self, sqlQuery, parent = None) -> None:
 		self.parent = parent
 		self.sqlQuery = sqlQuery
-		super().__init__()		
+		super().__init__()    
 		self.setWindowTitle("Resultado de busqueda")
 
 		# Set layout
@@ -423,6 +454,7 @@ class WindowTableDBCustom(QWidget):
 
 		# Add custom table
 		self.boxMain.addWidget(TableDBCustom(self))
+
 
 def main():
 	app = QApplication(sys.argv)
