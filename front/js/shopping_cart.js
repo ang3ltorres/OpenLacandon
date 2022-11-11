@@ -1,12 +1,15 @@
-const {ipcRenderer} = require("electron");
+const {getGlobal} = require("@electron/remote");
+let gui = getGlobal("gui");
 
-let shoppingCart = ipcRenderer.sendSync("getShoppingCart");
-let accountInfo = ipcRenderer.sendSync("getAccountInfo");
+let shoppingCart = gui.shoppingCart;
+let accountInfo = gui.accountInfo;
 let total = 0.0;
 
 // Refresh the items using the shopping array id_format and get the info from DB
 async function refreshShoppingItems()
 {
+	total = 0.0;
+
 	for (let i = 0; i < shoppingCart.length; i++)
 	{
 		let itemInstance = document.getElementById("template_item").content.cloneNode(true);
@@ -15,15 +18,15 @@ async function refreshShoppingItems()
 
 		// VISTA formato/titulo/isbn etc
 		itemInstance.querySelector(".book_title").innerHTML
-		= ipcRenderer.sendSync("customQuery", `SELECT TITLE FROM BOOK_TITLE_FORMAT WHERE ID = ${shoppingCart[i].id};`)[0].title;
+		= (await gui.customQuery(`SELECT TITLE FROM BOOK_TITLE_FORMAT WHERE ID = ${shoppingCart[i].id};`))[0].title;
 
 		itemInstance.querySelector(".format_type").innerHTML
-		= ipcRenderer.sendSync("customQuery", `SELECT TYPE FROM FORMAT WHERE ID = ${shoppingCart[i].id};`)[0].type;
+		= (await gui.customQuery(`SELECT TYPE FROM FORMAT WHERE ID = ${shoppingCart[i].id};`))[0].type;
 
 		itemInstance.querySelector(".amount").innerHTML
 		= shoppingCart[i].amount;
 
-		let totalTemp = ipcRenderer.sendSync("customQuery", `SELECT PRICE_LIST FROM FORMAT WHERE ID = ${shoppingCart[i].id};`)[0].price_list * shoppingCart[i].amount;
+		let totalTemp = (await gui.customQuery(`SELECT PRICE_LIST FROM FORMAT WHERE ID = ${shoppingCart[i].id};`))[0].price_list * shoppingCart[i].amount;
 		itemInstance.querySelector(".total").innerHTML
 		= totalTemp
 
@@ -38,7 +41,7 @@ async function refreshShoppingItems()
 refreshShoppingItems();
 
 // Buy items button
-document.getElementById("button_buy").addEventListener("click", (event) =>
+document.getElementById("button_buy").addEventListener("click", async (event) =>
 {
 	if (accountInfo.wallet_balance < total)
 	{
@@ -46,22 +49,21 @@ document.getElementById("button_buy").addEventListener("click", (event) =>
 		return;
 	}
 
-	// New wallet balance
-	ipcRenderer.sendSync("customQuery", `UPDATE CLIENT SET WALLET_BALANCE = ${accountInfo.wallet_balance - total} WHERE ID = ${accountInfo.id};`)
+/* 	// New wallet balance
+	await gui.customQuery(`UPDATE CLIENT SET WALLET_BALANCE = ${accountInfo.wallet_balance - total} WHERE ID = ${accountInfo.id};`)
 
 	// New format stock
 	for (let i = 0; i < shoppingCart.length; i++)
 	{
-		let currentStock = ipcRenderer.sendSync("customQuery", `SELECT STOCK FROM FORMAT WHERE ID = ${shoppingCart[i].id}`)[0].stock;
-		ipcRenderer.sendSync("customQuery", `UPDATE FORMAT SET STOCK = ${currentStock - shoppingCart[i].amount} WHERE ID = ${shoppingCart[i].id};`)
-
+		let currentStock = (await gui.customQuery(`SELECT STOCK FROM FORMAT WHERE ID = ${shoppingCart[i].id}`))[0].stock;
+		await gui.customQuery(`UPDATE FORMAT SET STOCK = ${currentStock - shoppingCart[i].amount} WHERE ID = ${shoppingCart[i].id};`)
 	}
-
+ */
 	// Create purchase and purchase detail
 
-	// Get new user data
-	ipcRenderer.sendSync("refreshAccountInfo");
-	accountInfo = ipcRenderer.sendSync("getAccountInfo");
+	// Refresh account info
+	gui.refreshAccountInfo();
+	accountInfo = gui.accountInfo;
 });
 
 // Remove button click event
@@ -80,9 +82,7 @@ content_item.addEventListener("click", (event) =>
 			{
 				// Delete id_format from array
 				shoppingCart.splice(i, 1);
-
-				// Set the new array on the main process
-				ipcRenderer.sendSync("setShoppingCart", shoppingCart)
+				gui.setShoppingCart(shoppingCart);
 
 				// Clear contents of shopping items container
 				while (content_item.firstChild)

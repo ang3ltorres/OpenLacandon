@@ -375,13 +375,15 @@ class GUI
 
 	async refreshAccountInfo()
 	{
-		user = (await this.client.query(`SELECT * FROM CLIENT WHERE ID = '${this.accountInfo.id}';`)).rows[0];
+		let user = (await this.client.query(`SELECT * FROM CLIENT WHERE ID = '${this.accountInfo.id}';`)).rows[0];
 		
 		// Save account data locally
 		this.accountInfo.username = user.username;
 		this.accountInfo.password = user.password;
 		this.accountInfo.wallet_balance = user.wallet_balance;
 	}
+
+	setShoppingCart(newShoppingCart) {this.shoppingCart = newShoppingCart;}
 
 	async connectDB()
 	{
