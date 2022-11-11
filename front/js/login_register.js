@@ -1,7 +1,9 @@
-const {ipcRenderer} = require("electron");
+const {getCurrentWindow, getGlobal} = require("@electron/remote");
+let gui = getGlobal("gui");
 
 //*** Error field ***//
 let error_field_login = document.getElementById("error_field_login");
+let error_field_register = document.getElementById("error_field_register");
 
 //*** Forms ***//
 let login_form = document.getElementById("login");
@@ -17,24 +19,20 @@ let login_new_account = document.getElementById("login_new_account");
 let login_username = document.getElementById("login_username");
 let login_password = document.getElementById("login_password");
 
-// Set Buttons
-login_button.addEventListener("click", () =>
+// Set button event
+login_button.addEventListener("click", async () =>
 {
-	let res = ipcRenderer.sendSync("userLogin", login_username.value, login_password.value);
+	let res = await gui.login(login_username.value, login_password.value);
 
 	switch (res)
 	{
 		case -1: error_field_login.innerHTML = "Contraseña incorrecta"; break;
 		case -2: error_field_login.innerHTML = "Usuario no existente"; break;
+		default: gui.window.main.webContents.reloadIgnoringCache(); getCurrentWindow().close(); break;
 	}
 });
 
 login_new_account.addEventListener("click", () => {login_form.style.display="none"; register_form.style.display="block";});
-
-// Set Fields
-let login = (event) => {if (event.key == "Enter") {ipcRenderer.sendSync("userLogin", login_username.value, login_password.value);}};
-login_username.addEventListener("keyup", login);
-login_password.addEventListener("keyup", login);
 
 //***  Register ***//
 
@@ -48,13 +46,17 @@ let register_email = document.getElementById("register_email");
 let register_password = document.getElementById("register_password");
 let register_password_confirmation = document.getElementById("register_password_confirmation");
 
-// Set Buttons
-register_button.addEventListener("click", () => {ipcRenderer.sendSync("userRegister", register_username.value, register_email.value, register_password.value, register_password_confirmation.value);});
-register_login_instead.addEventListener("click", () => {login_form.style.display="block"; register_form.style.display="none";});
+// Set button event
+register_button.addEventListener("click", async () =>
+{
+	let res = await gui.register(register_username.value, register_email.value, register_password.value, register_password_confirmation.value);
 
-// Set Fields
-let register = (event) => {if (event.key == "Enter") {ipcRenderer.sendSync("userRegister", register_username.value, register_email.value, register_password.value, register_password_confirmation.value);}};
-register_username.addEventListener("keyup", register);
-register_email.addEventListener("keyup", register);
-register_password.addEventListener("keyup", register);
-register_password_confirmation.addEventListener("keyup", register);
+	switch (res)
+	{
+		case -1: error_field_register.innerHTML = "Usuario ya registrado"; break;
+		case -2: error_field_register.innerHTML = "Contraseñas diferentes"; break;
+		default: gui.window.main.webContents.reloadIgnoringCache(); getCurrentWindow().close(); break;
+	}
+	
+});
+register_login_instead.addEventListener("click", () => {login_form.style.display="block"; register_form.style.display="none";});

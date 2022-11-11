@@ -329,21 +329,14 @@ class GUI
 		this.accountInfo.wallet_balance = 0;
 		this.accountInfo.id = id;
 
-		// Close window
-		this.window.login.close();
-		this.window.main.webContents.reloadIgnoringCache();
-
 		return id;
 	}
 
-	/**
-	 * Login using an (username / email) and password
-	 * @param  {String} username_email Username or email
-	 * @param  {String} password       User password
-	 * @return {Number}                User ID, -1 if password is incorrect, -2 if user doesn't exist
-	 */
 	async login(username_email, password)
 	{
+		// Debug
+		console.log({username_email, password});
+
 		// Check user password (if found)
 		let checkUser = (user, accountInfo) =>
 		{
@@ -357,11 +350,6 @@ class GUI
 				this.accountInfo.password = user.password;
 				this.accountInfo.wallet_balance = user.wallet_balance;
 				this.accountInfo.id = id;
-
-				// Close window
-				this.window.login.close();
-				this.window.main.webContents.reloadIgnoringCache();
-				//this.window.main.reload();
 
 				return id;
 			}
