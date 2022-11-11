@@ -127,6 +127,12 @@ async function configIpcMain(GUI)
 		event.returnValue = 0;
 	});
 
+	ipcMain.on("createAccountDetailWindow", async (event) =>
+	{
+		GUI.createAccountDetailWindow();
+		event.returnValue = 0;
+	});
+
 	ipcMain.on("createShoppingCartWindow", async (event) =>
 	{
 		GUI.createShoppingCartWindow();

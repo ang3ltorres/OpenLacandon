@@ -70,4 +70,11 @@ async function refreshOrder()
 		document.getElementById("order_container").appendChild(orderInstance);
 	}
 }
+
+// Config account detail button
+document.getElementById("button_account_detail").addEventListener("click", (event) =>
+{
+	let GUI = ipcRenderer.sendSync("createAccountDetailWindow");
+});
+
 refreshOrder();

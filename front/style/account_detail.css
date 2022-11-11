@@ -1,0 +1,47 @@
+html, body {
+	height: 100%;
+	width: 100%;
+	margin: 0;
+	background-color: black;
+}
+
+#container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	
+	height: 100%;
+	width: 100%;
+}
+
+.field {
+	width: 200px;
+}
+
+.field label {
+	display: block;
+	width: 100%;
+	margin: auto;
+	text-align: left;
+	font-style: italic;
+	color: lightgray;
+}
+
+.field input {
+	display: block;
+	color: black;
+	width: 100%;
+	margin: 0 0 12px 0;
+}
+
+#buttons {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+#buttons * {
+	display: block;
+	width: 45%;
+	margin: auto;
+}

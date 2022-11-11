@@ -15,7 +15,8 @@ class GUI
 			detail: null,
 			account: null,
 			addToCart: null,
-			shoppingCart: null
+			shoppingCart: null,
+			accountDetail: null
 		};
 
 		this.adminPassword = "123";
@@ -40,10 +41,15 @@ class GUI
 
 		app.whenReady().then(this.init.bind(this));
 		app.on("window-all-closed", this.quit.bind(this));
+
+		app.on("browser-window-created", (event, window) => {
+			require("@electron/remote/main").enable(window.webContents)
+		})
 	}
 
 	async init()
 	{
+		require('@electron/remote/main').initialize()
 		await this.createWelcomeWindow();
 		await configIpcMain(this);
 	}
@@ -266,6 +272,36 @@ class GUI
 		this.window.addToCart.setMenu(null);
 		//this.window.addToCart.openDevTools();
 		this.window.addToCart.once("ready-to-show", () => {this.window.addToCart.show();})
+	}
+
+	async createAccountDetailWindow()
+	{
+		this.window.accountDetail = new BrowserWindow
+		({
+			parent: this.window.account,
+			modal: true,
+			show: false,
+			width: 1280,
+			height: 720,
+			fullscreen: false,
+			webPreferences:
+			{
+				nodeIntegration: true,
+				contextIsolation: false,
+				webSecurity: false
+			}
+		});
+
+		this.window.accountDetail.loadFile("./front/html/account_detail.html");
+		this.window.accountDetail.setMenu(null);
+		this.window.accountDetail.openDevTools();
+		this.window.accountDetail.once("ready-to-show", () => {this.window.accountDetail.show();})
+	}
+
+	async customQuery(query)
+	{
+		console.log(query);
+		return (await this.client.query(query)).rows;
 	}
 
 	async register(username, email, password, passwordConfirmation)

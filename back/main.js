@@ -1,2 +1,2 @@
 const GUI = require("./gui.js");
-let gui = new GUI();
+global.gui = new GUI();
