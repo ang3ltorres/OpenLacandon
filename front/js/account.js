@@ -1,8 +1,9 @@
-const {ipcRenderer} = require("electron");
+const {getGlobal} = require("@electron/remote");
+let gui = getGlobal("gui");
 
 let months = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
 
-let accountInfo = ipcRenderer.sendSync("getAccountInfo");
+let accountInfo = gui.accountInfo;
 let user_info = document.getElementById("user_info");
 
 // Set the user name and wallet balance
@@ -13,7 +14,7 @@ user_info.querySelector("#wallet_balance").innerHTML = `Cartera $${accountInfo.w
 async function refreshOrder()
 {
 	// Get orders from specific client
-	let order = ipcRenderer.sendSync("customQuery", `SELECT * FROM ORD WHERE ID_CLIENT = ${accountInfo.id};`);
+	let order = await gui.customQuery(`SELECT * FROM ORD WHERE ID_CLIENT = ${accountInfo.id};`);
 
 	// For every order set..
 	for (let i = 0; i < order.length; i++)
@@ -37,7 +38,7 @@ async function refreshOrder()
 		${order[i].date_delivery.getFullYear()}`;
 
 		// Get all the purchase details from order
-		let detail = ipcRenderer.sendSync("customQuery", `SELECT * FROM ORD_DETAIL WHERE ID_ORDER = ${order[i].id};`);
+		let detail = await gui.customQuery(`SELECT * FROM ORD_DETAIL WHERE ID_ORDER = ${order[i].id};`);
 		
 		// For every purchase detail, part of order
 		for (let j = 0; j < detail.length; j++)
@@ -51,12 +52,12 @@ async function refreshOrder()
 			// Set title of book
 
 			// VISTA book->format->ord_detail
-			let bookTitle = ipcRenderer.sendSync("customQuery", `SELECT TITLE FROM BOOK_TITLE_ORDER WHERE DETAIL_ID = ${detail[j].id};`)[0].title;
+			let bookTitle = (await gui.customQuery(`SELECT TITLE FROM BOOK_TITLE_ORDER WHERE DETAIL_ID = ${detail[j].id};`))[0].title;
 			detailInstance.querySelector(".book_title").innerHTML = `Titulo: ${bookTitle}`;
 			
 			// Set format type
 			// VISTA format->
-			let formatType = ipcRenderer.sendSync("customQuery", `SELECT TYPE FROM FORMAT_TYPE_ORDER WHERE DETAIL_ID = ${detail[j].id};`)[0].type;
+			let formatType = (await gui.customQuery(`SELECT TYPE FROM FORMAT_TYPE_ORDER WHERE DETAIL_ID = ${detail[j].id};`))[0].type;
 			detailInstance.querySelector(".format_type").innerHTML = `Formato: ${formatType}`;
 
 			// Set the amount
@@ -72,9 +73,9 @@ async function refreshOrder()
 }
 
 // Config account detail button
-document.getElementById("button_account_detail").addEventListener("click", (event) =>
+document.getElementById("button_account_detail").addEventListener("click", async () =>
 {
-	let GUI = ipcRenderer.sendSync("createAccountDetailWindow");
+	await gui.createAccountDetailWindow();
 });
 
 refreshOrder();

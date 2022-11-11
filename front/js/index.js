@@ -1,12 +1,13 @@
-const {ipcRenderer} = require("electron");
 const fs = require("fs");
+const {getGlobal} = require("@electron/remote");
+let gui = getGlobal("gui");
 
 // Get the default img bytes to avoid erros
 let defaultImage = fs.readFileSync(__dirname + "/../res/default.jpg", null);
 
 // Login icon
 let button_login = document.getElementById("button_login");
-let accountInfo = ipcRenderer.sendSync("getAccountInfo");
+let accountInfo = gui.accountInfo;
 
 // Set the corresponding icon if we are logged in or not
 if (accountInfo.loggedIn)
@@ -35,7 +36,7 @@ function addBook(isbn, image, title, author, format, price)
 // Refresh all books
 function refreshData()
 {
-	let data = ipcRenderer.sendSync("getBookData");
+	let data = gui.bookData.rows;
 	
 	for (let i = 0; i < data.length; i++)
 	{
@@ -54,7 +55,7 @@ function refreshData()
 refreshData();
 
 // Book clicked event
-document.getElementById("content_book").addEventListener("click", (event) =>
+document.getElementById("content_book").addEventListener("click", async (event) =>
 {
 	if (event.target.matches(".book, .book *"))
 	{
@@ -63,32 +64,32 @@ document.getElementById("content_book").addEventListener("click", (event) =>
 		localStorage.setItem("ISBN", book.dataset.isbn)
 
 		// Create detail window
-		ipcRenderer.sendSync("createDetailWindow");
+		await gui.createDetailWindow();
 	}
 });
 
 // User button clicked event
 let button_user = document.getElementById("button_user");
-button_user.addEventListener("click", (event) =>
+button_user.addEventListener("click", async () =>
 {
 	if (accountInfo.loggedIn)
-		ipcRenderer.sendSync("createAccountWindow");
+		await gui.createAccountWindow();
 	else
 		alert("Por favor inicie sesión");
 })
 
 // shopping cart button clicked event
 let button_shopping_cart = document.getElementById("button_shopping_cart");
-button_shopping_cart.addEventListener("click", (event) =>
+button_shopping_cart.addEventListener("click", async () =>
 {
 	if (accountInfo.loggedIn)
-		ipcRenderer.sendSync("createShoppingCartWindow");
+		await gui.createShoppingCartWindow();
 	else
 		alert("Por favor inicie sesión");
 });
 
 // Login button clicked event
-document.getElementById("button_login").addEventListener("click", (event) =>
+document.getElementById("button_login").addEventListener("click", async () =>
 {
-	ipcRenderer.sendSync("createLoginWindow");
+	await gui.createLoginWindow();
 });
