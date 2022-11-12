@@ -1,4 +1,4 @@
-const {app, BrowserWindow, Menu} = require("electron");
+const {app, BrowserWindow, Menu, dialog} = require("electron");
 const {Client} = require("pg");
 const configIpcMain = require("./async_comms");
 
@@ -83,11 +83,15 @@ class GUI
 
 		this.window.welcome.loadFile("./front/html/welcome.html");
 		this.window.welcome.setMenu(null);
-		//this.window.welcome.openDevTools();
+		this.window.welcome.openDevTools();
 	}
 
 	async createMainWindow()
 	{
+		// Login
+		this.connectDB();
+		this.bookData = await this.client.query("SELECT * FROM BOOK;");
+
 		this.window.main = new BrowserWindow
 		({
 			width: 1280,
@@ -382,6 +386,8 @@ class GUI
 		this.accountInfo.password = user.password;
 		this.accountInfo.wallet_balance = user.wallet_balance;
 	}
+
+	alertMessage(window, options) {dialog.showMessageBoxSync(window, options);}
 
 	setShoppingCart(newShoppingCart) {this.shoppingCart = newShoppingCart;}
 

@@ -73,7 +73,6 @@ async function configIpcMain(GUI)
 		GUI.connectDB();
 		GUI.bookData = await GUI.client.query("SELECT * FROM BOOK;");
 
-
 		GUI.window.welcome.close();
 		GUI.createMainWindow();
 		event.returnValue = null;

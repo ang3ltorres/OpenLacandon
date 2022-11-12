@@ -1,4 +1,4 @@
-const {getGlobal} = require("@electron/remote");
+const {getCurrentWindow, getGlobal} = require("@electron/remote");
 let gui = getGlobal("gui");
 
 let shoppingCart = gui.shoppingCart;
@@ -45,7 +45,7 @@ document.getElementById("button_buy").addEventListener("click", async (event) =>
 {
 	if (accountInfo.wallet_balance < total)
 	{
-		alert("No cuenta con suficiente saldo en la cartera");
+		gui.alertMessage(getCurrentWindow(), {title: "Error", message: "No cuenta con suficiente saldo en la cartera", type: "error"});
 		return;
 	}
 

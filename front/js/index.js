@@ -1,5 +1,5 @@
 const fs = require("fs");
-const {getGlobal} = require("@electron/remote");
+const {getCurrentWindow, getGlobal} = require("@electron/remote");
 let gui = getGlobal("gui");
 
 // Get the default img bytes to avoid erros
@@ -75,7 +75,7 @@ button_user.addEventListener("click", async () =>
 	if (accountInfo.loggedIn)
 		await gui.createAccountWindow();
 	else
-		alert("Por favor inicie sesión");
+		gui.alertMessage(getCurrentWindow(), {title: "Error", message: "Por favor inicie sesión", type: "error"});
 })
 
 // shopping cart button clicked event
@@ -85,7 +85,7 @@ button_shopping_cart.addEventListener("click", async () =>
 	if (accountInfo.loggedIn)
 		await gui.createShoppingCartWindow();
 	else
-		alert("Por favor inicie sesión");
+		gui.alertMessage(getCurrentWindow(), {title: "Error", message: "Por favor inicie sesión", type: "error"});
 });
 
 // Login button clicked event
