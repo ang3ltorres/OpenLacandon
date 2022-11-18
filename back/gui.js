@@ -16,7 +16,8 @@ class GUI
 			account: null,
 			addToCart: null,
 			shoppingCart: null,
-			accountDetail: null
+			accountDetail: null,
+			addMoney: null
 		};
 
 		this.adminPassword = "123";
@@ -300,6 +301,30 @@ class GUI
 		this.window.accountDetail.setMenu(null);
 		this.window.accountDetail.openDevTools();
 		this.window.accountDetail.once("ready-to-show", () => {this.window.accountDetail.show();})
+	}
+
+	async createAddMoneyWindow()
+	{
+		this.window.addMoney = new BrowserWindow
+		({
+			parent: this.window.account,
+			modal: true,
+			show: false,
+			width: 800,
+			height: 600,
+			fullscreen: false,
+			webPreferences:
+			{
+				nodeIntegration: true,
+				contextIsolation: false,
+				webSecurity: false
+			}
+		});
+
+		this.window.addMoney.loadFile("./front/html/add_money.html");
+		this.window.addMoney.setMenu(null);
+		this.window.addMoney.openDevTools();
+		this.window.addMoney.once("ready-to-show", () => {this.window.addMoney.show();})
 	}
 
 	async customQuery(query)

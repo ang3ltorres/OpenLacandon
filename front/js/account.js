@@ -78,4 +78,10 @@ document.getElementById("button_account_detail").addEventListener("click", async
 	await gui.createAccountDetailWindow();
 });
 
+// Add money window
+document.getElementById("button_add_money").addEventListener("click", async () =>
+{
+	await gui.createAddMoneyWindow();
+});
+
 refreshOrder();
