@@ -385,6 +385,8 @@ class GUI
 		this.accountInfo.username = user.username;
 		this.accountInfo.password = user.password;
 		this.accountInfo.wallet_balance = user.wallet_balance;
+
+		return this.accountInfo;
 	}
 
 	alertMessage(window, options) {dialog.showMessageBoxSync(window, options);}

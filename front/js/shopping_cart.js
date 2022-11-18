@@ -49,21 +49,30 @@ document.getElementById("button_buy").addEventListener("click", async (event) =>
 		return;
 	}
 
-/* 	// New wallet balance
-	await gui.customQuery(`UPDATE CLIENT SET WALLET_BALANCE = ${accountInfo.wallet_balance - total} WHERE ID = ${accountInfo.id};`)
-
+	// New wallet balance
 	// New format stock
-	for (let i = 0; i < shoppingCart.length; i++)
-	{
-		let currentStock = (await gui.customQuery(`SELECT STOCK FROM FORMAT WHERE ID = ${shoppingCart[i].id}`))[0].stock;
-		await gui.customQuery(`UPDATE FORMAT SET STOCK = ${currentStock - shoppingCart[i].amount} WHERE ID = ${shoppingCart[i].id};`)
-	}
- */
+
 	// Create purchase and purchase detail
 
-	// Refresh account info
-	gui.refreshAccountInfo();
-	accountInfo = gui.accountInfo;
+	// Random date delivery
+	let dateDelivery = new Date();
+	dateDelivery.setDate(dateDelivery.getDate() + (Math.floor(1000 * Math.random()) % 6 +1));
+	dateDelivery = dateDelivery.toISOString().split('T')[0];
+
+	await gui.customQuery(`INSERT INTO ORD VALUES(DEFAULT, ${accountInfo.id}, DEFAULT, '${dateDelivery}');`);
+	let idOrder = (await gui.customQuery(`SELECT ID FROM ORD WHERE ID = (SELECT MAX(ID) FROM ORD);`))[0].id;
+
+	for (let i = 0; i < shoppingCart.length; i++)
+		await gui.customQuery(`INSERT INTO ORD_DETAIL VALUES(DEFAULT, ${idOrder}, ${shoppingCart[i].id}, (SELECT PRICE_LIST FROM FORMAT WHERE ID = ${shoppingCart[i].id}), ${shoppingCart[i].amount});`);
+
+	// Refresh
+	accountInfo = gui.refreshAccountInfo();
+	shoppingCart = [];
+	gui.setShoppingCart(shoppingCart);
+
+	// Close window and show window alert
+	gui.alertMessage(getCurrentWindow(), {title: "Compra exitosa", message: "Su compra se ha realizado con exito", type: "info"});
+	getCurrentWindow().close();
 });
 
 // Remove button click event
