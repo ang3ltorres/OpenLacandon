@@ -18,7 +18,7 @@ button_no.addEventListener("click", () =>
 let button_yes = document.getElementById("button_yes");
 button_yes.addEventListener("click", async () =>
 {
-	//let availableCount = (await gui.client.query(`SELECT STOCK FROM FORMAT WHERE ID = ${id_format};`))[0].stock;
+	let stock = (await gui.customQuery(`SELECT STOCK FROM FORMAT WHERE ID = ${id_format};`))[0].stock;
 			
 	// Find if format repeated
 	let index = null;
@@ -32,16 +32,31 @@ button_yes.addEventListener("click", async () =>
 	
 	// If repeated add amount
 	if (repeated)
-		shoppingCart[index].amount++;
+	{
+		if ((stock == -1) || (stock >= shoppingCart[index].amount+1))
+			shoppingCart[index].amount++;
+		else
+		{
+			gui.alertMessage(getCurrentWindow(), {title: "Error", message: "No hay stock suficiente", type: "error"});
+			getCurrentWindow().close();
+		}
+
+	}
 
 	// Else add new format to shopping cart items
 	else
 	{
-		shoppingCart.push(
+		if ((stock == -1) || (stock >= 1))
+			shoppingCart.push(
+			{
+				id: id_format,
+				amount: 1
+			});
+		else
 		{
-			id: id_format,
-			amount: 1
-		});
+			gui.alertMessage(getCurrentWindow(), {title: "Error", message: "No hay stock suficiente", type: "error"});
+			getCurrentWindow().close();
+		}
 	}
 
 	gui.setShoppingCart(shoppingCart);

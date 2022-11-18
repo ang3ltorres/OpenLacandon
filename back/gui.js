@@ -390,8 +390,8 @@ class GUI
 	}
 
 	alertMessage(window, options) {dialog.showMessageBoxSync(window, options);}
-
 	setShoppingCart(newShoppingCart) {this.shoppingCart = newShoppingCart;}
+	logoutUser() {this.accountInfo.loggedIn = false; this.shoppingCart = [];}
 
 	async connectDB()
 	{

@@ -43,16 +43,24 @@ refreshShoppingItems();
 // Buy items button
 document.getElementById("button_buy").addEventListener("click", async (event) =>
 {
+	// Not enough money
 	if (accountInfo.wallet_balance < total)
 	{
 		gui.alertMessage(getCurrentWindow(), {title: "Error", message: "No cuenta con suficiente saldo en la cartera", type: "error"});
 		return;
 	}
 
-	// New wallet balance
-	// New format stock
+	// Empty shopping cart
+	if (shoppingCart.length == 0)
+	{
+		gui.alertMessage(getCurrentWindow(), {title: "Error", message: "El carrito está vacío", type: "error"});
+		return;
+	}
 
-	// Create purchase and purchase detail
+	// New wallet balance: Auto
+	// New format stock: Auto
+
+	///* Create purchase and purchase detail *///
 
 	// Random date delivery
 	let dateDelivery = new Date();

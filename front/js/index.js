@@ -91,5 +91,11 @@ button_shopping_cart.addEventListener("click", async () =>
 // Login button clicked event
 document.getElementById("button_login").addEventListener("click", async () =>
 {
-	await gui.createLoginWindow();
+	if (accountInfo.loggedIn)
+	{
+		gui.logoutUser();
+		getCurrentWindow().webContents.reloadIgnoringCache();
+	}
+	else
+		await gui.createLoginWindow();
 });
