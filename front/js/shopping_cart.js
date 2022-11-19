@@ -24,11 +24,11 @@ async function refreshShoppingItems()
 		= (await gui.customQuery(`SELECT TYPE FROM FORMAT WHERE ID = ${shoppingCart[i].id};`))[0].type;
 
 		itemInstance.querySelector(".amount").innerHTML
-		= shoppingCart[i].amount;
+		= `Cantidad: ${shoppingCart[i].amount}`;
 
 		let totalTemp = (await gui.customQuery(`SELECT PRICE_LIST FROM FORMAT WHERE ID = ${shoppingCart[i].id};`))[0].price_list * shoppingCart[i].amount;
 		itemInstance.querySelector(".total").innerHTML
-		= totalTemp
+		= `Costo: $${totalTemp}`;
 
 		total += totalTemp;
 
@@ -36,7 +36,7 @@ async function refreshShoppingItems()
 	}
 	
 	// Set items total cost
-	document.getElementById("total").innerHTML = total;
+	document.getElementById("total").innerHTML = `Total: $${total}`;
 }
 refreshShoppingItems();
 

@@ -2,12 +2,12 @@
 <html>
 	<head>
 		<meta charset="UTF-8" />
-		<title>Agregar al carrito</title>
+		<title>Carrito de compra</title>
 		<link rel="stylesheet" href="../style/shopping_cart.css" type="text/css" />
 	</head>
 	<body>
 		<div id="container">
-			<span>Carrito de compra</span>
+			<span id="title">Carrito de compra</span>
 
 			<template id="template_item">
 				<div class="item" data-id="">
@@ -20,7 +20,6 @@
 			</template>
 			<div id="content_item"></div>
 
-			<span>Total: </span>
 			<span id="total"></span>
 			<button id="button_buy">Realizar compra</button>
 		</div>
