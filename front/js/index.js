@@ -34,9 +34,19 @@ function addBook(isbn, image, title, author, format, price)
 }
 
 // Refresh all books
+let data = null;
+let search_box = document.getElementById("search_box");
+
 async function refreshData()
 {
-	let data = gui.bookData.rows;
+	if (search_box.value == "")
+		data = await gui.customQuery(`SELECT * FROM BOOK;`);
+	else
+		data = await gui.customQuery(`SELECT * FROM BOOK WHERE (TITLE LIKE '%${search_box.value}%') OR (AUTHOR LIKE '%${search_box.value}%');`);
+
+	console.log(data);
+
+	//data = gui.bookData.rows;
 	
 	for (let i = 0; i < data.length; i++)
 	{
@@ -66,6 +76,17 @@ async function refreshData()
 }
 
 refreshData();
+
+// Search button event
+document.getElementById("search_button").addEventListener("click", async () =>
+{
+	let content_book = document.getElementById("content_book");
+
+	// Clear current books
+	while (content_book.firstChild)
+		content_book.removeChild(content_book.firstChild);
+	refreshData();
+});
 
 // Book clicked event
 document.getElementById("content_book").addEventListener("click", async (event) =>

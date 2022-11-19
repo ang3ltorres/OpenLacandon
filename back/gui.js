@@ -136,7 +136,7 @@ class GUI
 			}
 		];
 		this.window.main.setMenu(Menu.buildFromTemplate(menuTemplate));
-		//this.window.main.openDevTools();
+		this.window.main.openDevTools();
 	}
 
 	async createBackupWindow()
