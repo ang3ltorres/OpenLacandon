@@ -263,7 +263,7 @@ class GUI
 			modal: true,
 			show: false,
 			width: 300,
-			height: 300,
+			height: 140,
 			fullscreen: false,
 			webPreferences:
 			{

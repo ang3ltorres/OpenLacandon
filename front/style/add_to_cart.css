@@ -3,3 +3,37 @@ html, body {
 	width: 100%;
 	margin: 0;
 }
+
+body {
+	background-color: black;
+}
+
+span {
+	color: white;
+	display: block;
+	font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+	font-size: 24px;
+	text-align: center;
+	font-weight: bold;
+}
+
+#buttons {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+}
+
+button {
+	color: black;
+	width: 20%;
+	margin: 18px 12px auto 12px;
+	font-size: 18px;
+	border: 0;
+	background-color: rgb(225, 253, 197);
+}
+
+button:hover {
+	background-color: rgb(168, 192, 143);
+	cursor: pointer;
+}
