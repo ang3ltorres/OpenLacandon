@@ -27,27 +27,40 @@ function addBook(isbn, image, title, author, format, price)
 	copy.querySelector(".title").innerHTML = title;
 	copy.querySelector(".author").innerHTML = author;
 	copy.querySelector(".format").innerHTML = format;
-	copy.querySelector(".price").innerHTML = "$" + price;
+	copy.querySelector(".price").innerHTML = price;
 	
 	// Add to the content book main container
 	document.getElementById("content_book").appendChild(copy);
 }
 
 // Refresh all books
-function refreshData()
+async function refreshData()
 {
 	let data = gui.bookData.rows;
 	
 	for (let i = 0; i < data.length; i++)
 	{
+		// Format (random format found on DB)
+		let format = (await gui.customQuery(`SELECT TYPE, PRICE_LIST FROM FORMAT WHERE ISBN = ${data[i].isbn}`));
+		let type = "";
+		let price_list = "";
+
+		if (format.length >= 1)
+		{
+			let index = (Math.floor(100000 * Math.random()) % format.length);
+			type = format[index].type;
+			price_list = `$${format[index].price_list}`;
+		}
+
 		addBook
 		(
 			data[i].isbn,
 			(data[i].image_front ? data[i].image_front.buffer : defaultImage.buffer),
 			data[i].title,
 			data[i].author,
-			"test",
-			"100"
+
+			type,
+			price_list
 		);
 	}
 }

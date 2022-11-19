@@ -8,7 +8,7 @@ let user_info = document.getElementById("user_info");
 
 // Set the user name and wallet balance
 user_info.querySelector("#username").innerHTML = `Usuario: ${accountInfo.username}`;
-user_info.querySelector("#wallet_balance").innerHTML = `Cartera $${accountInfo.wallet_balance}`;
+user_info.querySelector("#wallet_balance").innerHTML = `Cartera: $${accountInfo.wallet_balance}`;
 
 // Refresh all oders and order details using the DB
 async function refreshOrder()
