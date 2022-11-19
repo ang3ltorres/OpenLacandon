@@ -43,10 +43,6 @@ async function refreshData()
 		data = await gui.customQuery(`SELECT * FROM BOOK;`);
 	else
 		data = await gui.customQuery(`SELECT * FROM BOOK WHERE (TITLE LIKE '%${search_box.value}%') OR (AUTHOR LIKE '%${search_box.value}%');`);
-
-	console.log(data);
-
-	//data = gui.bookData.rows;
 	
 	for (let i = 0; i < data.length; i++)
 	{

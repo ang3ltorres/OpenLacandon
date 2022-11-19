@@ -24,7 +24,6 @@ class GUI
 		this.connected = false;
 
 		this.client = null;
-		this.bookData = null;
 
 		this.accountInfo =
 		{
@@ -91,7 +90,6 @@ class GUI
 	{
 		// Login
 		this.connectDB();
-		this.bookData = await this.client.query("SELECT * FROM BOOK;");
 
 		this.window.main = new BrowserWindow
 		({
