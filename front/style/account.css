@@ -5,47 +5,62 @@ html, body {
 	background-color: black;
 }
 
-#container {
-	border: 4px solid green;
-}
-
-#user_info {
-	border: 4px solid red;
+body * {
 	color: white;
 	display: block;
 }
 
-#user_info * {
-	display: block;
+#container {
+	margin: 6px;
+}
+
+button {
+	color: black;
+}
+
+#username, #wallet_balance {
 	font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
-	font-size: 32px;
+	font-size: 24px;
+	margin: 10px 0 0 0;
 }
 
-#user_info button {
-	font-size: 16px;
+button {
+	font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+	font-size: 18px;
+	color: black;
+	background-color: white;
+	border: 0px solid transparent;
+	border-radius: 8px;
 }
 
-#order_container
-{
-	border: 4px solid yellow;
-	display: block;
+button:hover {
+	background-color: #c9c9c9;
+	cursor: pointer;
+}
+
+.order, .order_detail {
+	font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
 }
 
 .order {
-	border: 4px solid blue;
-	color: white;
-	display: block;
+	border: 3px solid white;
+	border-radius: 8px;
+	margin: 18px auto 0 auto;
+	padding: 8px;
+	text-align: center;
+	font-size: 18px;
 }
 
-.order * {
-	display: block;
+.id, .date_order, .date_delivery {
+	color: rgb(253, 255, 217);
 }
 
-.order_detail
-{
-	border: 4px solid cyan;
-
+.order_detail {
+	border: 3px solid aqua;
+	border-radius: 6px;
+	margin: 8px;
+	padding: 8px;
+	text-align: left;
+	font-size: 16px;
 }
-
-
 

@@ -84,7 +84,7 @@ class GUI
 
 		this.window.welcome.loadFile("./front/html/welcome.html");
 		this.window.welcome.setMenu(null);
-		this.window.welcome.openDevTools();
+		//this.window.welcome.openDevTools();
 	}
 
 	async createMainWindow()
@@ -136,7 +136,7 @@ class GUI
 			}
 		];
 		this.window.main.setMenu(Menu.buildFromTemplate(menuTemplate));
-		this.window.main.openDevTools();
+		//this.window.main.openDevTools();
 	}
 
 	async createBackupWindow()
@@ -179,7 +179,7 @@ class GUI
 
 		this.window.detail.loadFile("./front/html/detail.html");
 		this.window.detail.setMenu(null);
-		this.window.detail.openDevTools();
+		//this.window.detail.openDevTools();
 		this.window.detail.once("ready-to-show", () => {this.window.detail.show();})
 	}
 
@@ -203,7 +203,7 @@ class GUI
 
 		this.window.login.loadFile("./front/html/login_register.html");
 		this.window.login.setMenu(null);
-		this.window.login.openDevTools();
+		//this.window.login.openDevTools();
 		this.window.login.once("ready-to-show", () => {this.window.login.show();})
 	}
 
@@ -227,7 +227,7 @@ class GUI
 
 		this.window.shoppingCart.loadFile("./front/html/shopping_cart.html");
 		this.window.shoppingCart.setMenu(null);
-		this.window.shoppingCart.openDevTools();
+		//this.window.shoppingCart.openDevTools();
 		this.window.shoppingCart.once("ready-to-show", () => {this.window.shoppingCart.show();})
 	}
 
@@ -251,7 +251,7 @@ class GUI
 
 		this.window.account.loadFile("./front/html/account.html");
 		this.window.account.setMenu(null);
-		this.window.account.openDevTools();
+		//this.window.account.openDevTools();
 		this.window.account.once("ready-to-show", () => {this.window.account.show();})
 	}
 
@@ -299,7 +299,7 @@ class GUI
 
 		this.window.accountDetail.loadFile("./front/html/account_detail.html");
 		this.window.accountDetail.setMenu(null);
-		this.window.accountDetail.openDevTools();
+		//this.window.accountDetail.openDevTools();
 		this.window.accountDetail.once("ready-to-show", () => {this.window.accountDetail.show();})
 	}
 
@@ -323,7 +323,7 @@ class GUI
 
 		this.window.addMoney.loadFile("./front/html/add_money.html");
 		this.window.addMoney.setMenu(null);
-		this.window.addMoney.openDevTools();
+		//this.window.addMoney.openDevTools();
 		this.window.addMoney.once("ready-to-show", () => {this.window.addMoney.show();})
 	}
 
