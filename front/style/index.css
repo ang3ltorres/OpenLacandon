@@ -67,7 +67,7 @@ body {
 
 /** Book item **/
 .book {
-	display: table-cell;
+	display: inline-grid;
 
 	font-size: 14px;
 	width: 200px;

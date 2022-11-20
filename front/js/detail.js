@@ -11,6 +11,7 @@ let formatData = ipcRenderer.sendSync("customQuery", `SELECT * FROM FORMAT WHERE
 // Select book details
 let bookImage = document.getElementById("book_image");
 let bookTitle = document.getElementById("title");
+let bookReleaseDate = document.getElementById("release_date");
 let bookSynopsis = document.getElementById("synopsis");
 let bookAuthor = document.getElementById("author");
 let bookRating = document.getElementById("rating");
@@ -23,6 +24,7 @@ else
 
 // Set book details
 bookTitle.innerHTML = bookData.title;
+bookReleaseDate.innerHTML = bookData.release_date;
 bookSynopsis.innerHTML = bookData.synopsis;
 bookAuthor.innerHTML = bookData.author;
 

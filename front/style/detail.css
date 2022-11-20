@@ -30,6 +30,15 @@ html, body {
 	text-align: center;
 }
 
+#release_date {
+	display: block;
+	font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+	font-size: 18px;
+	font-weight: bold;
+	text-align: center;
+	color: white;
+}
+
 #author_container {
 	display: block;
 }
