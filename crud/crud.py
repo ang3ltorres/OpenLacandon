@@ -30,11 +30,10 @@ class CRUD(QMainWindow):
 		cursor = connection.cursor()
 
 		# Get table names
-		cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'public';")
-		tables = cursor.fetchall()
-		tableNames = []
-		for i in tables:
-			tableNames.append(str(i[0]))
+
+		#cursor.execute("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'public';")
+		#tables = cursor.fetchall()
+		tableNames = ['purchase_detail', 'book', 'format', 'client', 'ord', 'ord_detail', 'supplier', 'purchase']
 
 		print(tableNames)
 		
