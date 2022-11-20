@@ -42,7 +42,7 @@ async function refreshData()
 	if (search_box.value == "")
 		data = await gui.customQuery(`SELECT * FROM BOOK;`);
 	else
-		data = await gui.customQuery(`SELECT * FROM BOOK WHERE (TITLE LIKE '%${search_box.value}%') OR (AUTHOR LIKE '%${search_box.value}%');`);
+		data = await gui.customQuery(`SELECT * FROM BOOK WHERE (LOWER(TITLE) LIKE LOWER('%${search_box.value}%')) OR (LOWER(AUTHOR) LIKE LOWER('%${search_box.value}%'));`);
 	
 	for (let i = 0; i < data.length; i++)
 	{
@@ -73,8 +73,8 @@ async function refreshData()
 
 refreshData();
 
-// Search button event
-document.getElementById("search_button").addEventListener("click", async () =>
+// Search
+function search()
 {
 	let content_book = document.getElementById("content_book");
 
@@ -82,6 +82,13 @@ document.getElementById("search_button").addEventListener("click", async () =>
 	while (content_book.firstChild)
 		content_book.removeChild(content_book.firstChild);
 	refreshData();
+}
+
+document.getElementById("search_button").addEventListener("click", search);
+search_box.addEventListener("keyup", (event) =>
+{
+	if (event.key == "Enter")
+		search();
 });
 
 // Book clicked event
