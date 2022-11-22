@@ -284,8 +284,8 @@ class GUI
 			parent: this.window.account,
 			modal: true,
 			show: false,
-			width: 1280,
-			height: 720,
+			width: 350,
+			height: 600,
 			fullscreen: false,
 			webPreferences:
 			{
